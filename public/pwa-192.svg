@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192" role="img" aria-label="MailX">
+  <rect width="192" height="192" rx="42" fill="#d93025"/>
+  <path d="M44 58h104c8.8 0 16 7.2 16 16v52c0 8.8-7.2 16-16 16H44c-8.8 0-16-7.2-16-16V74c0-8.8 7.2-16 16-16Z" fill="#fff"/>
+  <path d="m39 73 57 42 57-42" fill="none" stroke="#d93025" stroke-width="14" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="m67 138 58-80" stroke="#0b57d0" stroke-width="14" stroke-linecap="round"/>
+</svg>
