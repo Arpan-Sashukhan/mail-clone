@@ -2,7 +2,7 @@ import { ArrowLeft, Paperclip, Send, Trash2 } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { IconButton } from '../components/IconButton'
-import { gmailService } from '../services/gmailService'
+import { gmailService } from '../services/gmailService.mock'
 
 export function ComposePage() {
   const navigate = useNavigate()

@@ -7,11 +7,31 @@ export function useEmails(mailbox: Mailbox = 'inbox') {
   const [loading, setLoading] = useState(true)
   const [refreshing, setRefreshing] = useState(false)
 
-  useEffect(() => {
-    gmailService.getInbox().then((messages) => {
+  async function loadEmails() {
+    try {
+      const accessToken = localStorage.getItem(
+        'gmail_access_token'
+      )
+
+      if (!accessToken) {
+        setLoading(false)
+        return
+      }
+
+      const messages = await gmailService.getInbox(
+        accessToken
+      )
+
       setEmails(messages)
+    } catch (error) {
+      console.error(error)
+    } finally {
       setLoading(false)
-    })
+    }
+  }
+
+  useEffect(() => {
+    loadEmails()
   }, [])
 
   const filteredEmails = useMemo(() => {
@@ -24,15 +44,11 @@ export function useEmails(mailbox: Mailbox = 'inbox') {
     }
 
     if (mailbox === 'drafts') {
-      return emails.slice(0, 2).map((email) => ({ ...email, subject: `Draft: ${email.subject}` }))
+      return emails.slice(0, 2)
     }
 
     if (mailbox === 'trash') {
       return emails.slice(-3)
-    }
-
-    if (mailbox === 'custom') {
-      return emails.filter((email) => email.senderEmail.includes('northstar'))
     }
 
     return emails
@@ -40,13 +56,18 @@ export function useEmails(mailbox: Mailbox = 'inbox') {
 
   async function refresh() {
     setRefreshing(true)
-    const messages = await gmailService.getInbox()
 
-    window.setTimeout(() => {
-      setEmails(messages)
+    await loadEmails()
+
+    setTimeout(() => {
       setRefreshing(false)
-    }, 700)
+    }, 500)
   }
 
-  return { emails: filteredEmails, loading, refreshing, refresh }
+  return {
+    emails: filteredEmails,
+    loading,
+    refreshing,
+    refresh,
+  }
 }

@@ -1,5 +1,5 @@
 import type { Email } from '../types/email'
-import { gmailService } from './gmailService'
+import { gmailService } from './gmailService.mock'
 
 export const customMailService = {
   getInbox(): Promise<Email[]> {

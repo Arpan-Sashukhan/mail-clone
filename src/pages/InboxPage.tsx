@@ -6,6 +6,10 @@ import { SearchBar } from '../components/SearchBar'
 import { useEmails } from '../hooks/useEmails'
 import type { Mailbox } from '../types/email'
 
+import GmailLogin from '../components/GmailLogin'
+
+
+
 interface InboxPageProps {
   mailbox: Mailbox
   settingsView?: boolean
@@ -49,6 +53,11 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
   return (
     <main className="gmail-scroll mx-auto min-h-svh max-w-2xl bg-white pb-24 dark:bg-[#0f1113]">
       <SearchBar onOpenDrawer={openDrawer} />
+
+      <div className="px-4 py-2">
+        <GmailLogin />
+      </div>
+
       <section className="bg-white px-4 pb-1 pt-2 dark:bg-[#0f1113]">
         <div className="flex items-center justify-between">
           <h1 className="text-xs font-medium uppercase tracking-[0.08em] text-[#5f6368] dark:text-[#c4c7c5]">{mailboxTitles[mailbox]}</h1>

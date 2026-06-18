@@ -1,32 +1,85 @@
-import emails from '../data/emails.json'
 import type { Email } from '../types/email'
 
-const inbox = emails as Email[]
+const GMAIL_BASE_URL =
+  'https://gmail.googleapis.com/gmail/v1/users/me'
+
+function getHeader(
+  headers: any[],
+  name: string
+) {
+  return (
+    headers.find(
+      (header) =>
+        header.name.toLowerCase() ===
+        name.toLowerCase()
+    )?.value ?? ''
+  )
+}
 
 export const gmailService = {
-  async getInbox(): Promise<Email[]> {
-    return inbox
-  },
+  async getInbox(
+    accessToken: string
+  ): Promise<Email[]> {
+    const listResponse = await fetch(
+      `${GMAIL_BASE_URL}/messages?maxResults=20`,
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    )
 
-  async getMessage(id: string): Promise<Email | undefined> {
-    return inbox.find((email) => email.id === id)
-  },
+    const listData = await listResponse.json()
 
-  async sendMail(message: Pick<Email, 'senderEmail' | 'subject' | 'body'>): Promise<Email> {
-    return {
-      id: `mx-${Date.now()}`,
-      sender: 'You',
-      senderEmail: message.senderEmail,
-      subject: message.subject,
-      preview: message.body.slice(0, 96),
-      body: message.body,
-      timestamp: 'Now',
-      read: true,
-      starred: false,
-    }
-  },
+    const messages = await Promise.all(
+      (listData.messages || []).map(
+        async (message: any) => {
+          const detailResponse = await fetch(
+            `${GMAIL_BASE_URL}/messages/${message.id}`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          )
 
-  async deleteMail(id: string): Promise<{ deleted: boolean; id: string }> {
-    return { deleted: Boolean(inbox.find((email) => email.id === id)), id }
+          const gmailMessage =
+            await detailResponse.json()
+
+          const headers =
+            gmailMessage.payload?.headers || []
+
+          return {
+            id: gmailMessage.id,
+            sender:
+              getHeader(headers, 'From') ||
+              'Unknown Sender',
+
+            senderEmail:
+              getHeader(headers, 'From'),
+
+            subject:
+              getHeader(headers, 'Subject') ||
+              '(No Subject)',
+
+            preview:
+              gmailMessage.snippet || '',
+
+            body:
+              gmailMessage.snippet || '',
+
+            timestamp: new Date(
+              Number(gmailMessage.internalDate)
+            ).toLocaleDateString(),
+
+            read: true,
+
+            starred: false,
+          } satisfies Email
+        }
+      )
+    )
+
+    return messages
   },
 }
