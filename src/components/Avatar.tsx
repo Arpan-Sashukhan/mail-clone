@@ -1,5 +1,6 @@
 interface AvatarProps {
   name: string
+  src?: string
   className?: string
 }
 
@@ -11,7 +12,7 @@ const colors = [
   'bg-[#ffe1a6] text-[#7c4a00]',
 ]
 
-export function Avatar({ name, className = '' }: AvatarProps) {
+export function Avatar({ name, src, className = '' }: AvatarProps) {
   const initials = name
     .split(' ')
     .map((part) => part[0])
@@ -21,8 +22,12 @@ export function Avatar({ name, className = '' }: AvatarProps) {
   const color = colors[name.length % colors.length]
 
   return (
-    <div className={`grid size-10 shrink-0 place-items-center rounded-full text-sm font-medium leading-none ${color} ${className}`}>
-      {initials}
+    <div className={`grid size-10 shrink-0 place-items-center overflow-hidden rounded-full text-sm font-medium leading-none ${color} ${className}`}>
+      {src ? (
+        <img src={src} alt="" className="size-full object-cover" referrerPolicy="no-referrer" />
+      ) : (
+        initials || '?'
+      )}
     </div>
   )
 }

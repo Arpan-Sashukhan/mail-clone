@@ -1,73 +1,133 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { gmailService } from '../services/gmailService'
 import type { Email, Mailbox } from '../types/email'
 
-export function useEmails(mailbox: Mailbox = 'inbox') {
-  const [emails, setEmails] = useState<Email[]>([])
-  const [loading, setLoading] = useState(true)
+type CacheEntry = {
+  emails: Email[]
+  updatedAt: number
+}
+
+const mailboxCache = new Map<string, CacheEntry>()
+const MAILBOX_STORAGE_KEY = 'mailx-mailbox-cache'
+
+function loadStoredCache() {
+  if (mailboxCache.size) {
+    return
+  }
+
+  const value = localStorage.getItem(MAILBOX_STORAGE_KEY)
+
+  if (!value) {
+    return
+  }
+
+  try {
+    const entries = JSON.parse(value) as Array<[string, CacheEntry]>
+    entries.forEach(([key, entry]) => mailboxCache.set(key, entry))
+  } catch {
+    localStorage.removeItem(MAILBOX_STORAGE_KEY)
+  }
+}
+
+function persistCache() {
+  const entries = Array.from(mailboxCache.entries()).slice(-24)
+  localStorage.setItem(MAILBOX_STORAGE_KEY, JSON.stringify(entries))
+}
+
+function getCacheKey(mailbox: Mailbox, query: string) {
+  return `${mailbox}:${query.trim()}`
+}
+
+export function useEmails(mailbox: Mailbox = 'inbox', query = '') {
+  loadStoredCache()
+  const cacheKey = useMemo(() => getCacheKey(mailbox, query), [mailbox, query])
+  const cached = mailboxCache.get(cacheKey)
+  const [emails, setEmails] = useState<Email[]>(() => cached?.emails || [])
+  const [loading, setLoading] = useState(() => !cached)
   const [refreshing, setRefreshing] = useState(false)
+  const [error, setError] = useState('')
 
-  async function loadEmails() {
-    try {
-      const accessToken = localStorage.getItem(
-        'gmail_access_token'
-      )
+  const loadEmails = useCallback(
+    async (force = false) => {
+      const cachedValue = mailboxCache.get(cacheKey)
 
-      if (!accessToken) {
+      if (cachedValue && !force) {
+        setEmails(cachedValue.emails)
         setLoading(false)
+        setError('')
         return
       }
 
-      const messages = await gmailService.getInbox(
-        accessToken
-      )
+      try {
+        const accessToken = localStorage.getItem('gmail_access_token')
 
-      setEmails(messages)
-    } catch (error) {
-      console.error(error)
-    } finally {
-      setLoading(false)
-    }
-  }
+        if (!accessToken) {
+          setEmails([])
+          setLoading(false)
+          setError('No Gmail Connected')
+          return
+        }
+
+        if (!refreshing) {
+          setLoading(true)
+        }
+
+        const messages = await gmailService.getMailbox(accessToken, mailbox, query)
+        mailboxCache.set(cacheKey, {
+          emails: messages,
+          updatedAt: Date.now(),
+        })
+        persistCache()
+        setEmails(messages)
+        setError('')
+      } catch (loadError) {
+        console.error(loadError)
+        setEmails([])
+        setError('Unable to load Gmail messages.')
+      } finally {
+        setLoading(false)
+      }
+    },
+    [cacheKey, mailbox, query, refreshing],
+  )
 
   useEffect(() => {
-    loadEmails()
-  }, [])
-
-  const filteredEmails = useMemo(() => {
-    if (mailbox === 'starred') {
-      return emails.filter((email) => email.starred)
-    }
-
-    if (mailbox === 'sent') {
-      return emails.filter((email) => email.sender === 'You')
-    }
-
-    if (mailbox === 'drafts') {
-      return emails.slice(0, 2)
-    }
-
-    if (mailbox === 'trash') {
-      return emails.slice(-3)
-    }
-
-    return emails
-  }, [emails, mailbox])
+    const cachedValue = mailboxCache.get(cacheKey)
+    queueMicrotask(() => {
+      setEmails(cachedValue?.emails || [])
+      setLoading(!cachedValue)
+      setError('')
+      void loadEmails()
+    })
+  }, [cacheKey, loadEmails])
 
   async function refresh() {
     setRefreshing(true)
+    await loadEmails(true)
 
-    await loadEmails()
-
-    setTimeout(() => {
+    window.setTimeout(() => {
       setRefreshing(false)
     }, 500)
   }
 
+  function updateEmail(id: string, updater: (email: Email) => Email) {
+    setEmails((current) => {
+      const next = current.map((email) => (email.id === id ? updater(email) : email))
+      mailboxCache.set(cacheKey, {
+        emails: next,
+        updatedAt: Date.now(),
+      })
+      persistCache()
+      return next
+    })
+  }
+
   return {
-    emails: filteredEmails,
+    emails,
     loading,
     refreshing,
+    error,
     refresh,
+    updateEmail,
   }
 }

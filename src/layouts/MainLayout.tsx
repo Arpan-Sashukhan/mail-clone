@@ -1,24 +1,136 @@
 import { useEffect, useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import { Outlet, useNavigate } from 'react-router-dom'
+import GmailLogin from '../components/GmailLogin'
 import { NavigationDrawer } from '../components/NavigationDrawer'
+import { InstallPrompt } from '../components/InstallPrompt'
+import { OfflineBanner } from '../components/OfflineBanner'
+import { useSettings } from '../contexts/SettingsContext'
+import {
+  clearGoogleSession,
+  fetchGoogleProfile,
+  getStoredProfile,
+  storeProfile,
+  type GoogleProfile,
+} from '../services/googleProfile'
+import { gmailService, type SendMailInput } from '../services/gmailService'
+
+const SEND_QUEUE_KEY = 'mailx-send-queue'
+
+type QueuedSend = {
+  input: SendMailInput
+  queuedAt: number
+}
 
 export function MainLayout() {
+  const navigate = useNavigate()
+  const { settings, resolvedDark, updateSetting } = useSettings()
   const [drawerOpen, setDrawerOpen] = useState(false)
-  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('mailx-theme') === 'dark')
+  const [profile, setProfile] = useState<GoogleProfile | null>(() => getStoredProfile())
+  const [authChecking, setAuthChecking] = useState(() => Boolean(localStorage.getItem('gmail_access_token')))
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode)
-    localStorage.setItem('mailx-theme', darkMode ? 'dark' : 'light')
-  }, [darkMode])
+    let active = true
+    const accessToken = localStorage.getItem('gmail_access_token')
+
+    if (!accessToken) {
+      clearGoogleSession()
+      return undefined
+    }
+
+    fetchGoogleProfile(accessToken)
+      .then((nextProfile) => {
+        if (!active) {
+          return
+        }
+
+        storeProfile(nextProfile)
+        setProfile(nextProfile)
+        setAuthChecking(false)
+      })
+      .catch(() => {
+        if (!active) {
+          return
+        }
+
+        clearGoogleSession()
+        setProfile(null)
+        setAuthChecking(false)
+        navigate('/inbox', { replace: true })
+      })
+
+    return () => {
+      active = false
+    }
+  }, [navigate])
+
+  useEffect(() => {
+    async function flushSendQueue() {
+      const accessToken = localStorage.getItem('gmail_access_token')
+      const value = localStorage.getItem(SEND_QUEUE_KEY)
+
+      if (!accessToken || !navigator.onLine || !value) {
+        return
+      }
+
+      try {
+        const queue = JSON.parse(value) as QueuedSend[]
+        const remaining: QueuedSend[] = []
+
+        for (const item of queue) {
+          try {
+            await gmailService.sendMail(accessToken, item.input)
+          } catch {
+            remaining.push(item)
+          }
+        }
+
+        if (remaining.length) {
+          localStorage.setItem(SEND_QUEUE_KEY, JSON.stringify(remaining))
+        } else {
+          localStorage.removeItem(SEND_QUEUE_KEY)
+        }
+      } catch {
+        localStorage.removeItem(SEND_QUEUE_KEY)
+      }
+    }
+
+    window.addEventListener('online', flushSendQueue)
+    void flushSendQueue()
+
+    return () => window.removeEventListener('online', flushSendQueue)
+  }, [])
+
+  function handleLogout() {
+    clearGoogleSession()
+    setProfile(null)
+    setDrawerOpen(false)
+    navigate('/inbox', { replace: true })
+  }
+
+  if (authChecking) {
+    return (
+      <main className="grid min-h-svh place-items-center bg-white">
+        <div className="size-11 animate-spin rounded-full border-[3px] border-[#1a73e8] border-t-transparent" aria-label="Checking Google session" />
+      </main>
+    )
+  }
+
+  if (!profile) {
+    return <GmailLogin onLoginSuccess={setProfile} />
+  }
 
   return (
-    <div className="min-h-svh bg-[#f8fafd] text-[#202124] dark:bg-[#0f1113] dark:text-[#e3e3e3]">
-      <Outlet context={{ openDrawer: () => setDrawerOpen(true) }} />
+    <div className="min-h-svh bg-[#f8fafd] text-[#202124] dark:bg-[#202124] dark:text-[#e8eaed]">
+      <OfflineBanner />
+      <Outlet context={{ openDrawer: () => setDrawerOpen(true), profile, onLogout: handleLogout }} />
+      <InstallPrompt />
       <NavigationDrawer
         open={drawerOpen}
-        darkMode={darkMode}
+        darkMode={resolvedDark}
+        profile={profile}
         onClose={() => setDrawerOpen(false)}
-        onToggleTheme={() => setDarkMode((value) => !value)}
+        onLogout={handleLogout}
+        onToggleTheme={() => updateSetting('theme', settings.theme === 'dark' ? 'light' : 'dark')}
       />
     </div>
   )
