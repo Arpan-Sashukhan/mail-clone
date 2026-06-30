@@ -274,6 +274,7 @@ function mapMessage(message: GmailMessage): Email {
 
   return {
     id: message.id,
+    provider: 'gmail',
     threadId: message.threadId,
     sender: sender.name,
     senderName: sender.name,
@@ -289,9 +290,11 @@ function mapMessage(message: GmailMessage): Email {
     bodyPlain: parts.plain || message.snippet || '',
     bodyHtml,
     timestamp: formatTimestamp(message.internalDate),
+    internalDate: message.internalDate,
     read: !labelIds.includes('UNREAD'),
     starred: labelIds.includes('STARRED'),
     important: labelIds.includes('IMPORTANT'),
+    importance: labelIds.includes('IMPORTANT') ? 'high' : 'normal',
     labels: labelIds.map(labelName),
     attachments: parts.attachments,
     rawHeaders: headerMap,

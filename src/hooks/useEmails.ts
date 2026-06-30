@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { gmailService } from '../services/gmailService'
+import { mailAggregator } from '../services/mailAggregator'
 import type { Email, Mailbox } from '../types/email'
 
 type CacheEntry = {
@@ -61,18 +61,11 @@ export function useEmails(mailbox: Mailbox = 'inbox', query = '') {
       try {
         const accessToken = localStorage.getItem('gmail_access_token')
 
-        if (!accessToken) {
-          setEmails([])
-          setLoading(false)
-          setError('No Gmail Connected')
-          return
-        }
-
         if (!refreshing) {
           setLoading(true)
         }
 
-        const messages = await gmailService.getMailbox(accessToken, mailbox, query)
+        const messages = await mailAggregator.getMailbox(accessToken, mailbox, query)
         mailboxCache.set(cacheKey, {
           emails: messages,
           updatedAt: Date.now(),
@@ -83,7 +76,7 @@ export function useEmails(mailbox: Mailbox = 'inbox', query = '') {
       } catch (loadError) {
         console.error(loadError)
         setEmails([])
-        setError('Unable to load Gmail messages.')
+        setError('Unable to load messages.')
       } finally {
         setLoading(false)
       }

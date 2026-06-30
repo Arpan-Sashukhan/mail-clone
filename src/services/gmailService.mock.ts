@@ -15,12 +15,14 @@ export const gmailService = {
   async sendMail(message: Pick<Email, 'senderEmail' | 'subject' | 'body'>): Promise<Email> {
     return {
       id: `mx-${Date.now()}`,
+      provider: 'gmail',
       sender: 'You',
       senderEmail: message.senderEmail,
       subject: message.subject,
       preview: message.body.slice(0, 96),
       body: message.body,
       timestamp: 'Now',
+      internalDate: String(Date.now()),
       read: true,
       starred: false,
     }

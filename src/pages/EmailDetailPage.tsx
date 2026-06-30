@@ -26,6 +26,7 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import { Avatar } from '../components/Avatar'
 import { IconButton } from '../components/IconButton'
 import { gmailService } from '../services/gmailService'
+import { mailAggregator } from '../services/mailAggregator'
 import type { Email, EmailAttachment } from '../types/email'
 
 function labelClass(label: string) {
@@ -118,17 +119,25 @@ export function EmailDetailPage() {
 
     async function loadMessage() {
       const accessToken = localStorage.getItem('gmail_access_token')
+      const storedEmail = localStorage.getItem('selected_email')
+      const selectedEmail = storedEmail ? (JSON.parse(storedEmail) as Email) : undefined
 
-      if (!accessToken || !id) {
-        setError('No Gmail Connected')
+      if (!id) {
+        setError('Unable to load this email.')
         setLoading(false)
         return
       }
 
       try {
-        const message = await gmailService.getMessage(accessToken, id)
+        const message = await mailAggregator.getMessage(accessToken, id, selectedEmail?.id === id ? selectedEmail.provider : undefined)
 
         if (!active) {
+          return
+        }
+
+        if (!message) {
+          setError('Unable to load this email.')
+          setLoading(false)
           return
         }
 
@@ -141,6 +150,10 @@ export function EmailDetailPage() {
         const dataEntries = await Promise.all(
           imageAttachments.map(async (attachment) => {
             try {
+              if (message.provider !== 'gmail' || !accessToken) {
+                return undefined
+              }
+
               const data = await gmailService.downloadAttachment(accessToken, message.id, attachment.id)
               return [attachment.contentId || attachment.id, `data:${attachment.mimeType};base64,${data.replace(/-/g, '+').replace(/_/g, '/')}`] as const
             } catch {

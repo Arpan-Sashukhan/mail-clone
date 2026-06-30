@@ -1,5 +1,6 @@
 export interface Email {
   id: string
+  provider: MailProviderId
   threadId?: string
   sender: string
   senderEmail: string
@@ -15,12 +16,29 @@ export interface Email {
   bodyHtml?: string
   bodyPlain?: string
   timestamp: string
+  internalDate?: string
   read: boolean
   starred: boolean
   important?: boolean
+  importance?: string
   labels?: string[]
   attachments?: EmailAttachment[]
+  avatar?: string
+  category?: string
   rawHeaders?: Record<string, string>
+}
+
+export type MailProviderId = 'gmail' | 'custom'
+
+export interface MailProvider {
+  id: MailProviderId
+  getMailbox(mailbox?: Mailbox, query?: string): Promise<Email[]>
+  getInbox(): Promise<Email[]>
+  getMessage(id: string): Promise<Email | undefined>
+  getSent(): Promise<Email[]>
+  getDrafts(): Promise<Email[]>
+  getTrash(): Promise<Email[]>
+  getStarred(): Promise<Email[]>
 }
 
 export interface EmailAttachment {
