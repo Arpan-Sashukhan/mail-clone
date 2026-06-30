@@ -5,11 +5,11 @@ interface AvatarProps {
 }
 
 const colors = [
-  'bg-[#d3e3fd] text-[#0842a0]',
-  'bg-[#f9dedc] text-[#b3261e]',
-  'bg-[#c2e7ff] text-[#00639b]',
-  'bg-[#c4eed0] text-[#146c2e]',
-  'bg-[#ffe1a6] text-[#7c4a00]',
+  'bg-[#a8d672] text-[#1f4d16]',
+  'bg-[#8ab4f8] text-[#0b3d91]',
+  'bg-[#f28b82] text-[#7f1d1d]',
+  'bg-[#fdd663] text-[#5c4100]',
+  'bg-[#c58af9] text-[#4c148c]',
 ]
 
 export function Avatar({ name, src, className = '' }: AvatarProps) {

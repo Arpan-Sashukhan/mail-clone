@@ -44,31 +44,31 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
   }, [accountOpen])
 
   return (
-    <header className="sticky top-0 z-20 bg-white/96 px-3 pb-2 pt-[max(12px,env(safe-area-inset-top))] backdrop-blur dark:bg-[#202124]/95">
-      <div className="relative flex h-14 items-center gap-1 rounded-full bg-[#f0f4f9] px-1 shadow-[0_1px_2px_rgba(60,64,67,0.22),0_1px_3px_1px_rgba(60,64,67,0.12)] transition-shadow focus-within:shadow-[0_2px_8px_rgba(60,64,67,0.2)] dark:bg-[#303134] dark:shadow-black/40">
-        <IconButton label="Open navigation" onClick={onOpenDrawer}>
+    <header className="sticky top-0 z-20 bg-white/96 px-2 pb-2 pt-[max(8px,env(safe-area-inset-top))] backdrop-blur dark:bg-[#202124]/95">
+      <div className="relative flex h-14 items-center rounded-[28px] bg-[#eef3fd] px-2 shadow-[0_1px_2px_rgba(60,64,67,0.18)] transition-shadow duration-200 focus-within:shadow-[0_2px_5px_rgba(60,64,67,0.18)] dark:bg-[#303134] dark:shadow-black/25">
+        <IconButton label="Open navigation" onClick={onOpenDrawer} className="size-12">
           <Menu size={24} />
         </IconButton>
         {searching ? (
-          <span className="size-5 shrink-0 animate-spin rounded-full border-2 border-[#0b57d0] border-t-transparent" aria-hidden="true" />
+          <span className="ml-2 size-6 shrink-0 animate-spin rounded-full border-2 border-[#1a73e8] border-t-transparent" aria-hidden="true" />
         ) : (
-          <Search size={20} className="shrink-0 text-[#5f6368] dark:text-[#c4c7c5]" aria-hidden="true" />
+          <Search size={24} className="ml-2 shrink-0 text-[#5f6368] dark:text-[#c4c7c5]" aria-hidden="true" />
         )}
         <input
           aria-label="Search emails"
           placeholder="Search in emails"
           value={searchValue}
           onChange={(event) => onSearchChange?.(event.target.value)}
-          className="h-full min-w-0 flex-1 bg-transparent px-2 text-base font-normal text-[#202124] outline-none placeholder:text-[#5f6368] dark:text-[#e3e3e3] dark:placeholder:text-[#c4c7c5]"
+          className="h-full min-w-0 flex-1 bg-transparent pl-4 pr-2 text-[22px] font-normal leading-none text-[#202124] outline-none placeholder:text-[#5f6368] dark:text-[#e3e3e3] dark:placeholder:text-[#c4c7c5]"
         />
         <button
           type="button"
           aria-label="Open Google account menu"
           aria-expanded={accountOpen}
           onClick={() => setAccountOpen((value) => !value)}
-          className="mr-2 grid size-10 shrink-0 place-items-center rounded-full transition hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b57d0] active:scale-95 active:bg-black/10 dark:hover:bg-white/[0.08]"
+          className="grid size-12 shrink-0 place-items-center rounded-full transition duration-150 hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a73e8] active:scale-95 active:bg-black/10 dark:hover:bg-white/[0.08]"
         >
-          <Avatar name={profile.name} src={profile.picture} className="size-8 text-xs shadow-[0_0_0_2px_white] dark:shadow-[0_0_0_2px_#303134]" />
+          <Avatar name={profile.name} src={profile.picture} className="size-10 text-xs shadow-[0_0_0_2px_white] dark:shadow-[0_0_0_2px_#303134]" />
         </button>
 
         <div

@@ -1,6 +1,8 @@
 import { useOutletContext } from 'react-router-dom'
-import { Inbox, RefreshCw } from 'lucide-react'
-import { useEffect, useMemo, useState } from 'react'
+import { Inbox } from 'lucide-react'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import type { TouchEvent } from 'react'
+import { BottomNavigation } from '../components/BottomNavigation'
 import { ComposeButton } from '../components/ComposeButton'
 import { EmailListItem } from '../components/EmailListItem'
 import { SearchBar } from '../components/SearchBar'
@@ -39,6 +41,8 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
   const { openDrawer, profile, onLogout } = useOutletContext<LayoutContext>()
   const [searchInput, setSearchInput] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
+  const [pullDistance, setPullDistance] = useState(0)
+  const pullStartY = useRef<number | null>(null)
 
   useEffect(() => {
     const timeout = window.setTimeout(() => setSearchQuery(searchInput), 360)
@@ -47,6 +51,31 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
 
   const { emails, loading, refreshing, error, refresh, updateEmail } = useEmails(mailbox, searchQuery)
   const searching = useMemo(() => searchInput !== searchQuery || (Boolean(searchQuery) && loading), [loading, searchInput, searchQuery])
+  const showPullIndicator = refreshing || pullDistance > 8
+
+  function handleTouchStart(event: TouchEvent<HTMLElement>) {
+    if (window.scrollY <= 0) {
+      pullStartY.current = event.touches[0]?.clientY ?? null
+    }
+  }
+
+  function handleTouchMove(event: TouchEvent<HTMLElement>) {
+    if (pullStartY.current === null || window.scrollY > 0) {
+      return
+    }
+
+    const nextDistance = Math.max(0, (event.touches[0]?.clientY ?? pullStartY.current) - pullStartY.current)
+    setPullDistance(Math.min(nextDistance * 0.45, 72))
+  }
+
+  function handleTouchEnd() {
+    if (pullDistance > 56 && !refreshing) {
+      void refresh()
+    }
+
+    pullStartY.current = null
+    setPullDistance(0)
+  }
 
   if (settingsView) {
     return (
@@ -67,7 +96,13 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
   }
 
   return (
-    <main className="gmail-scroll mx-auto min-h-svh max-w-2xl bg-white pb-24 dark:bg-[#202124]">
+    <main
+      className="gmail-scroll mx-auto min-h-svh max-w-2xl bg-white pb-40 dark:bg-[#202124]"
+      onTouchStart={handleTouchStart}
+      onTouchMove={handleTouchMove}
+      onTouchEnd={handleTouchEnd}
+      onTouchCancel={handleTouchEnd}
+    >
       <SearchBar
         profile={profile}
         onOpenDrawer={openDrawer}
@@ -77,26 +112,16 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
         searching={searching}
       />
 
-      <section className="bg-white px-4 pb-1 pt-2 dark:bg-[#202124]">
-        <div className="flex items-center justify-between">
-          <h1 className="text-xs font-medium uppercase tracking-[0.08em] text-[#5f6368] dark:text-[#c4c7c5]">{mailboxTitles[mailbox]}</h1>
-          <button
-            type="button"
-            onClick={refresh}
-            className="flex items-center gap-2 rounded-full px-3 py-2 text-xs font-medium text-[#5f6368] transition hover:bg-[#f1f3f4] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#0b57d0] active:scale-[0.98] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
-            aria-label="Refresh inbox"
-          >
-            <span
-              className={`grid size-5 place-items-center rounded-full ${
-                refreshing ? 'animate-spin border-2 border-[#0b57d0] border-t-transparent' : ''
-              }`}
-              aria-hidden="true"
-            >
-              {!refreshing ? <RefreshCw size={15} /> : null}
-            </span>
-            {refreshing ? 'Refreshing' : 'Pull to refresh'}
-          </button>
-        </div>
+      <div
+        className="grid place-items-center overflow-hidden bg-white transition-[height] duration-150 dark:bg-[#202124]"
+        style={{ height: showPullIndicator ? Math.max(32, pullDistance) : 0 }}
+        aria-hidden={!showPullIndicator}
+      >
+        {showPullIndicator ? <span className="size-6 animate-spin rounded-full border-2 border-[#1a73e8] border-t-transparent" /> : null}
+      </div>
+
+      <section className="bg-white px-4 pb-3 pt-2 dark:bg-[#202124]">
+        <h1 className="text-[16px] font-medium leading-5 tracking-normal text-[#3c4043] dark:text-[#e3e3e3]">{mailboxTitles[mailbox]}</h1>
       </section>
       <section aria-label={`${mailboxTitles[mailbox]} emails`}>
         {loading ? (
@@ -151,6 +176,7 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
         )}
       </section>
       <ComposeButton />
+      <BottomNavigation />
     </main>
   )
 }
