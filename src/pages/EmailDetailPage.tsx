@@ -1,54 +1,31 @@
 import {
-  Archive,
-  ArrowDown,
-  ArrowLeft,
   Download,
   Eye,
   File,
   FileArchive,
   FileText,
-  Forward,
   Inbox,
-  MailOpen,
-  MoreVertical,
-  Move,
-  Printer,
-  Reply,
-  ReplyAll,
-  ShieldAlert,
-  Star,
-  Tag,
-  Trash2,
 } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { Avatar } from '../components/Avatar'
 import { IconButton } from '../components/IconButton'
+import { MessageDetails } from '../components/MessageDetails'
 import { gmailService } from '../services/gmailService'
 import { mailAggregator } from '../services/mailAggregator'
 import type { Email, EmailAttachment } from '../types/email'
 
-function labelClass(label: string) {
-  const normalized = label.toLowerCase()
-
-  if (normalized.includes('important')) {
-    return 'bg-[#feefc3] text-[#7c4a00]'
-  }
-
-  if (normalized.includes('starred')) {
-    return 'bg-[#fef7e0] text-[#b06000]'
-  }
-
-  if (normalized.includes('social')) {
-    return 'bg-[#e8f0fe] text-[#174ea6]'
-  }
-
-  if (normalized.includes('promotion')) {
-    return 'bg-[#e6f4ea] text-[#137333]'
-  }
-
+function labelClass() {
   return 'bg-[#f1f3f4] text-[#5f6368] dark:bg-[#2b2c2f] dark:text-[#c4c7c5]'
+}
+
+function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
+  return (
+    <span aria-hidden="true" className={`material-symbols-rounded leading-none ${className}`}>
+      {name}
+    </span>
+  )
 }
 
 function attachmentIcon(attachment: EmailAttachment) {
@@ -108,7 +85,6 @@ export function EmailDetailPage() {
   })
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
-  const [detailsOpen, setDetailsOpen] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
   const [starred, setStarred] = useState(false)
   const [attachmentData, setAttachmentData] = useState<Record<string, string>>({})
@@ -231,65 +207,67 @@ export function EmailDetailPage() {
   )
 
   return (
-    <main className="gmail-scroll mx-auto min-h-svh max-w-2xl bg-white pb-10 dark:bg-[#202124]">
-      <header className="sticky top-0 z-20 flex h-16 items-center gap-1 bg-white/96 px-2 pt-[env(safe-area-inset-top)] shadow-[0_1px_2px_rgba(60,64,67,0.08)] backdrop-blur dark:bg-[#202124]/95">
-        <IconButton label="Back" onClick={() => navigate(-1)}>
-          <ArrowLeft size={22} />
+    <main className="gmail-scroll mx-auto min-h-svh max-w-[720px] bg-white pb-10 dark:bg-[#202124]">
+      <header className="sticky top-0 z-20 flex h-16 items-center border-b border-[#ececec] bg-white px-4 pt-[env(safe-area-inset-top)] dark:border-[#303134] dark:bg-[#202124]">
+        <IconButton label="Back" onClick={() => navigate(-1)} className="size-6 text-[#5f6368]">
+          <SymbolIcon name="arrow_back" className="text-2xl" />
         </IconButton>
 
         <div className="flex-1" />
 
-        <IconButton label="Archive">
-          <Archive size={21} />
-        </IconButton>
-        <IconButton label="Delete">
-          <Trash2 size={21} />
-        </IconButton>
-        <IconButton label="Mark unread">
-          <MailOpen size={21} />
-        </IconButton>
-        <IconButton label="Move">
-          <Move size={21} />
-        </IconButton>
-        <div className="relative" ref={menuRef}>
-          <IconButton label="More options" onClick={() => setMenuOpen((value) => !value)}>
-            <MoreVertical size={21} />
+        <div className="flex items-center gap-6">
+          <IconButton label="Archive" className="size-6 text-[#5f6368]">
+            <SymbolIcon name="archive" className="text-2xl" />
           </IconButton>
-          <div
-            role="menu"
-            className={`absolute right-1 top-12 z-30 w-64 origin-top-right overflow-hidden rounded-[20px] bg-white py-2 text-sm font-medium text-[#202124] shadow-[0_8px_28px_rgba(60,64,67,0.24)] transition duration-180 dark:bg-[#202124] dark:text-[#e3e3e3] ${
-              menuOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
-            }`}
-          >
-            {[
-              ['Reply All', ReplyAll],
-              ['Forward', Forward],
-              [starred ? 'Remove Star' : 'Add Star', Star],
-              ['Move', Move],
-              ['Labels', Tag],
-              ['Mark unread', MailOpen],
-              ['Print', Printer],
-              ['Report spam', ShieldAlert],
-              ['Report phishing', ShieldAlert],
-              ['Block sender', ShieldAlert],
-              ['Mute conversation', Inbox],
-              ['Delete forever', Trash2],
-            ].map(([label, Icon]) => (
-              <button
-                key={label as string}
-                type="button"
-                onClick={() => {
-                  if (label === 'Add Star' || label === 'Remove Star') {
-                    setStarred((value) => !value)
-                  }
-                  setMenuOpen(false)
-                }}
-                className="flex h-11 w-full items-center gap-4 px-5 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed] dark:hover:bg-white/[0.08]"
-              >
-                <Icon size={18} />
-                <span>{label as string}</span>
-              </button>
-            ))}
+          <IconButton label="Delete" className="size-6 text-[#5f6368]">
+            <SymbolIcon name="delete" className="text-2xl" />
+          </IconButton>
+          <IconButton label="Mark unread" className="size-6 text-[#5f6368]">
+            <SymbolIcon name="mail" className="text-2xl" />
+          </IconButton>
+          <IconButton label="Move" className="size-6 text-[#5f6368]">
+            <SymbolIcon name="drive_file_move" className="text-2xl" />
+          </IconButton>
+          <div className="relative" ref={menuRef}>
+            <IconButton label="More options" onClick={() => setMenuOpen((value) => !value)} className="size-6 text-[#5f6368]">
+              <SymbolIcon name="more_vert" className="text-2xl" />
+            </IconButton>
+            <div
+              role="menu"
+              className={`absolute right-0 top-12 z-30 w-64 origin-top-right overflow-hidden rounded-[20px] bg-white py-2 text-sm font-medium text-[#202124] shadow-[0_8px_28px_rgba(60,64,67,0.24)] transition duration-180 dark:bg-[#202124] dark:text-[#e3e3e3] ${
+                menuOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
+              }`}
+            >
+              {[
+                ['Reply All', 'reply_all'],
+                ['Forward', 'forward'],
+                [starred ? 'Remove Star' : 'Add Star', 'star'],
+                ['Move', 'drive_file_move'],
+                ['Labels', 'label'],
+                ['Mark unread', 'mail'],
+                ['Print', 'print'],
+                ['Report spam', 'report'],
+                ['Report phishing', 'gpp_maybe'],
+                ['Block sender', 'block'],
+                ['Mute conversation', 'inbox'],
+                ['Delete forever', 'delete'],
+              ].map(([label, icon]) => (
+                <button
+                  key={label}
+                  type="button"
+                  onClick={() => {
+                    if (label === 'Add Star' || label === 'Remove Star') {
+                      setStarred((value) => !value)
+                    }
+                    setMenuOpen(false)
+                  }}
+                  className="flex h-11 w-full items-center gap-4 px-5 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed] dark:hover:bg-white/[0.08]"
+                >
+                  <SymbolIcon name={icon} className="text-[20px] text-[#5f6368]" />
+                  <span>{label}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </header>
@@ -309,96 +287,67 @@ export function EmailDetailPage() {
       ) : null}
 
       {!loading && email ? (
-        <article className="px-5">
-          <div className="flex items-start gap-2 pt-3">
-            <h1 className="min-w-0 flex-1 text-[26px] font-normal leading-[1.18] tracking-normal text-[#202124] dark:text-[#e3e3e3]">
+        <article className="email-detail-enter">
+          <div className="mx-6 mt-5 flex items-center gap-4">
+            <h1 className="min-w-0 flex-1 font-['Google_Sans',Roboto,sans-serif] text-[34px] font-normal leading-[40px] tracking-normal text-[#202124] dark:text-[#e3e3e3]">
               {email.subject}
             </h1>
             <button
               type="button"
               aria-label={starred ? 'Remove star' : 'Add star'}
               onClick={() => setStarred((value) => !value)}
-              className="grid size-11 shrink-0 place-items-center rounded-full text-[#bdc1c6] transition hover:bg-[#f1f3f4] hover:text-[#fbbc04] active:scale-90 dark:hover:bg-white/[0.08]"
+              className="star-button grid size-6 shrink-0 place-items-center rounded-full text-[#bdc1c6] transition duration-150 hover:bg-[#f1f3f4] hover:text-[#fbbc04] active:scale-110 dark:hover:bg-white/[0.08]"
             >
-              <Star size={22} className={starred ? 'fill-[#fbbc04] text-[#fbbc04]' : ''} />
+              <SymbolIcon name={starred ? 'star' : 'star'} className={`text-2xl ${starred ? 'material-symbols-filled text-[#fbbc04]' : ''}`} />
             </button>
           </div>
 
           {visibleLabels.length ? (
-            <div className="mt-4 flex flex-wrap gap-2">
+            <div className="mx-6 mt-4 flex flex-wrap gap-2">
               {visibleLabels.map((label) => (
-                <span key={label} className={`rounded-md px-2 py-1 text-xs font-medium ${labelClass(label)}`}>
+                <span key={label} className={`flex h-8 items-center rounded-xl px-3 py-1.5 text-sm font-medium leading-5 ${labelClass()}`}>
                   {label}
                 </span>
               ))}
             </div>
           ) : null}
 
-          <section className="mt-6 flex items-start gap-3">
-            <Avatar name={email.sender} className="size-10" />
+          <section className="mx-6 mt-6 flex items-start gap-4 pb-4">
+            <Avatar name={email.sender} src={email.avatar} className="size-12 text-base" />
 
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-3">
-                <button type="button" onClick={() => setDetailsOpen((value) => !value)} className="min-w-0 text-left">
-                  <p className="truncate text-[15px] font-semibold leading-5 text-[#202124] dark:text-[#e3e3e3]">{email.sender}</p>
-                  <p className="truncate text-xs leading-5 text-[#5f6368] dark:text-[#c4c7c5]">
+                <div className="min-w-0 text-left">
+                  <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-semibold leading-6 text-[#202124] dark:text-[#e3e3e3]">{email.sender}</p>
+                  <p className="mt-0.5 truncate text-[15px] font-normal leading-5 text-[#5f6368] dark:text-[#c4c7c5]">
                     to me • {email.senderEmail}
                   </p>
-                </button>
-
-                <div className="flex shrink-0 items-center gap-1">
-                  <time className="text-xs leading-5 text-[#5f6368] dark:text-[#c4c7c5]">{email.timestamp}</time>
-                  <button
-                    type="button"
-                    aria-label="Show message details"
-                    onClick={() => setDetailsOpen((value) => !value)}
-                    className="grid size-8 place-items-center rounded-full text-[#5f6368] transition hover:bg-[#f1f3f4] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
-                  >
-                    <ArrowDown size={16} className={`transition ${detailsOpen ? 'rotate-180' : ''}`} />
-                  </button>
                 </div>
-              </div>
 
-              <div
-                className={`mt-3 overflow-hidden rounded-2xl bg-[#f8fafd] text-xs leading-6 text-[#3c4043] transition-all duration-200 dark:bg-[#303134] dark:text-[#c4c7c5] ${
-                  detailsOpen ? 'max-h-80 p-4 opacity-100' : 'max-h-0 p-0 opacity-0'
-                }`}
-              >
-                <p>
-                  <span className="text-[#5f6368]">From:</span> {email.senderEmail}
-                </p>
-                <p>
-                  <span className="text-[#5f6368]">To:</span> {(email.to || ['me']).join(', ')}
-                </p>
-                {email.cc?.length ? (
-                  <p>
-                    <span className="text-[#5f6368]">Cc:</span> {email.cc.join(', ')}
-                  </p>
-                ) : null}
-                {email.bcc?.length ? (
-                  <p>
-                    <span className="text-[#5f6368]">Bcc:</span> {email.bcc.join(', ')}
-                  </p>
-                ) : null}
-                <p>
-                  <span className="text-[#5f6368]">Date:</span> {email.date}
-                </p>
-                {email.replyTo ? (
-                  <p>
-                    <span className="text-[#5f6368]">Reply-To:</span> {email.replyTo}
-                  </p>
-                ) : null}
+                <div className="flex shrink-0 items-center gap-4 pt-0.5">
+                  <time className="text-[15px] font-normal leading-[22px] text-[#5f6368] dark:text-[#c4c7c5]">{email.timestamp}</time>
+                  <Link
+                    to="/compose"
+                    state={{ mode: 'reply', ...replyState }}
+                    aria-label="Reply"
+                    className="grid size-[22px] place-items-center rounded-full text-[#5f6368] transition duration-150 hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
+                  >
+                    <SymbolIcon name="reply" className="text-[22px]" />
+                  </Link>
+                </div>
               </div>
             </div>
           </section>
 
+          <MessageDetails email={email} />
+
           <div
-            className="gmail-message-body mt-7 overflow-x-auto text-[15px] leading-7 text-[#202124] dark:text-[#e3e3e3]"
+            className="gmail-message-body mx-6 mt-8 overflow-x-auto font-['Roboto',Arial,sans-serif] text-base font-normal leading-7 text-[#202124] dark:text-[#e3e3e3]"
             dangerouslySetInnerHTML={{ __html: html }}
           />
 
           {email.attachments?.filter((attachment) => !attachment.inline || attachment.filename !== 'Inline image').length ? (
-            <section className="mt-8 grid gap-3" aria-label="Attachments">
+            <section className="mx-6 mt-8 grid gap-3" aria-label="Attachments">
               {email.attachments
                 .filter((attachment) => !attachment.inline || attachment.filename !== 'Inline image')
                 .map((attachment) => (
@@ -425,17 +374,17 @@ export function EmailDetailPage() {
             </section>
           ) : null}
 
-          <div className="mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mx-6 mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3">
             <Link to="/compose" state={{ mode: 'reply', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
-              <Reply size={18} />
+              <SymbolIcon name="reply" className="text-[18px]" />
               Reply
             </Link>
             <Link to="/compose" state={{ mode: 'replyAll', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
-              <ReplyAll size={18} />
+              <SymbolIcon name="reply_all" className="text-[18px]" />
               Reply all
             </Link>
             <Link to="/compose" state={{ mode: 'forward', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
-              <Forward size={18} />
+              <SymbolIcon name="forward" className="text-[18px]" />
               Forward
             </Link>
           </div>

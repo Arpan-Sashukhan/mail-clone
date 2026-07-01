@@ -1,28 +1,47 @@
-import { Mail, Video } from 'lucide-react'
 import { Link, useLocation } from 'react-router-dom'
+
+function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
+  return (
+    <span aria-hidden="true" className={`material-symbols-rounded text-2xl leading-none ${className}`}>
+      {name}
+    </span>
+  )
+}
 
 export function BottomNavigation() {
   const location = useLocation()
   const mailActive = location.pathname !== '/settings' && location.pathname !== '/compose' && !location.pathname.startsWith('/email/')
 
+  function openMeet() {
+    window.open('https://meet.google.com/landing', '_blank', 'noopener,noreferrer')
+  }
+
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-[#e8eaed] bg-white/98 pb-[env(safe-area-inset-bottom)] text-[#444746] backdrop-blur dark:border-[#3c4043] dark:bg-[#202124]/98 dark:text-[#c4c7c5]" aria-label="Primary navigation">
-      <div className="mx-auto grid h-16 max-w-2xl grid-cols-2">
+    <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-[#e8eaed] bg-white pb-[env(safe-area-inset-bottom)] text-[#5f6368]" aria-label="Primary navigation">
+      <div className="mx-auto grid h-20 max-w-2xl grid-cols-2">
         <Link
           to="/inbox"
-          className="flex min-w-0 flex-col items-center justify-center gap-1 text-xs font-medium"
+          className="flex min-w-0 flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-xs font-medium leading-4"
         >
-          <span className={`grid h-8 w-16 place-items-center rounded-full transition-colors ${mailActive ? 'bg-[#d3e3fd] text-[#041e49] dark:bg-[#0842a0] dark:text-[#d3e3fd]' : ''}`}>
-            <Mail size={24} strokeWidth={1.9} />
+          <span className={`relative grid h-8 w-16 place-items-center rounded-[20px] transition-colors ${mailActive ? 'bg-[#d3e3fd] text-[#174ea6]' : 'text-[#5f6368]'}`}>
+            <SymbolIcon name="mail" /> 
+            <span className="absolute right-[13px] top-[-4px] flex h-5 min-w-5 items-center justify-center rounded-[10px] bg-[#c5221f] px-1 text-[11px] font-medium leading-none text-white shadow-[0_0_0_1px_white]">
+              99+
+            </span>
           </span>
-          <span className={mailActive ? 'font-bold text-[#202124] dark:text-[#e3e3e3]' : ''}>Mail</span>
+         
         </Link>
 
-        <button type="button" className="flex min-w-0 flex-col items-center justify-center gap-1 text-xs font-medium" aria-label="Meet">
-          <span className="grid h-8 w-16 place-items-center rounded-full">
-            <Video size={24} strokeWidth={1.9} />
+        <button
+          type="button"
+          onClick={openMeet}
+          className="flex min-w-0 flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-xs font-medium leading-4 text-[#5f6368]"
+          aria-label="Meet"
+        >
+          <span className="grid h-8 w-16 place-items-center rounded-[20px]">
+            <SymbolIcon name="videocam" />
           </span>
-          <span>Meet</span>
+          
         </button>
       </div>
     </nav>

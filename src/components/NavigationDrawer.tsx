@@ -1,26 +1,4 @@
-import {
-  AlertOctagon,
-  Archive,
-  Clock3,
-  Edit3,
-  HelpCircle,
-  Inbox,
-  Info,
-  Mail,
-  Moon,
-  Plus,
-  Send,
-  Settings,
-  ShieldAlert,
-  Star,
-  Sun,
-  Tag,
-  Trash2,
-  Upload,
-} from 'lucide-react'
 import { NavLink } from 'react-router-dom'
-import { Avatar } from './Avatar'
-import { MailXLogo } from './MailXLogo'
 import type { GoogleProfile } from '../services/googleProfile'
 
 interface NavigationDrawerProps {
@@ -32,128 +10,162 @@ interface NavigationDrawerProps {
   onToggleTheme: () => void
 }
 
-const navItems = [
-  { label: 'All Inboxes', icon: Mail, count: 8 },
-  { to: '/inbox', label: 'Inbox', icon: Inbox, count: 8 },
-  { to: '/starred', label: 'Starred', icon: Star },
-  { label: 'Snoozed', icon: Clock3 },
-  { label: 'Important', icon: Tag },
-  { to: '/sent', label: 'Sent', icon: Send },
-  { label: 'Scheduled', icon: Clock3 },
-  { label: 'Outbox', icon: Upload },
-  { to: '/drafts', label: 'Drafts', icon: Edit3, count: 2 },
-  { label: 'All Mail', icon: Archive },
-  { label: 'Spam', icon: ShieldAlert },
-  { to: '/trash', label: 'Trash', icon: Trash2 },
-  { to: '/settings', label: 'Settings', icon: Settings },
-  { label: 'Help & Feedback', icon: HelpCircle },
+type DrawerItem = {
+  label: string
+  icon: string
+  count?: string
+}
+
+type CategoryItem = DrawerItem & {
+  to: string
+  badge: string
+  badgeClassName: string
+}
+
+const categories: CategoryItem[] = [
+  {
+    to: '/inbox',
+    label: 'Primary',
+    icon: 'inbox',
+    badge: '8 new',
+    badgeClassName: 'bg-[#dadce0] text-[#202124]',
+  },
+  {
+    to: '/promotions',
+    label: 'Promotions',
+    icon: 'sell',
+    badge: '2 new',
+    badgeClassName: 'bg-[#81c995] text-[#202124]',
+  },
+  {
+    to: '/social',
+    label: 'Social',
+    icon: 'groups',
+    badge: '4 new',
+    badgeClassName: 'bg-[#8ab4f8] text-[#202124]',
+  },
 ]
+
+const recentItems: DrawerItem[] = [
+  { label: 'Unwanted', icon: 'report', count: '1' },
+  { label: 'Starred', icon: 'star', count: '3' },
+  { label: 'Snoozed', icon: 'schedule' },
+  { label: 'Important', icon: 'label_important', count: '5' },
+]
+
+const allLabelItems: DrawerItem[] = [
+  { label: 'Sent', icon: 'send', count: '12' },
+  { label: 'Scheduled', icon: 'schedule_send' },
+  { label: 'Outbox', icon: 'outbox' },
+]
+
+function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
+  return (
+    <span aria-hidden="true" className={`material-symbols-rounded text-2xl leading-none ${className}`}>
+      {name}
+    </span>
+  )
+}
+
+function Badge({ children, className = 'bg-transparent text-[#202124]' }: { children?: string; className?: string }) {
+  if (!children) {
+    return null
+  }
+
+  return (
+    <span className={`ml-auto flex h-8 min-w-8 items-center justify-center rounded-full px-3 text-base font-medium leading-none ${className}`}>
+      {children}
+    </span>
+  )
+}
+
+function StaticRow({ item }: { item: DrawerItem }) {
+  return (
+    <div className="mx-3 flex h-14 items-center rounded-full px-3 text-[#202124]">
+      <SymbolIcon name={item.icon} />
+      <span className="ml-6 min-w-0 flex-1 truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-normal leading-6">
+        {item.label}
+      </span>
+      <Badge>{item.count}</Badge>
+    </div>
+  )
+}
+
+function SectionHeader({ children }: { children: string }) {
+  return (
+    <div className="mt-6 mb-3 px-6 font-['Google_Sans',Roboto,sans-serif] text-base font-medium uppercase leading-5 tracking-[2px] text-[#5f6368]">
+      {children}
+    </div>
+  )
+}
 
 export function NavigationDrawer({
   open,
-  darkMode,
-  profile,
   onClose,
-  onLogout,
-  onToggleTheme,
 }: NavigationDrawerProps) {
   return (
     <>
       <button
         type="button"
         aria-label="Close navigation"
-        className={`fixed inset-0 z-30 bg-black/38 transition-opacity duration-300 ease-[cubic-bezier(0.2,0,0,1)] ${
+        className={`fixed inset-0 z-30 bg-black/45 transition-opacity duration-[250ms] ease-[cubic-bezier(0.2,0,0,1)] ${
           open ? 'opacity-100' : 'pointer-events-none opacity-0'
         }`}
         onClick={onClose}
       />
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-[86vw] max-w-[328px] transform flex-col overflow-hidden rounded-br-[28px] rounded-tr-[28px] bg-white pt-[env(safe-area-inset-top)] shadow-[0_8px_24px_rgba(60,64,67,0.28)] transition-transform duration-300 ease-[cubic-bezier(0.2,0,0,1)] dark:bg-[#303134] dark:shadow-black/60 ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-[86vw] max-w-[320px] transform flex-col overflow-hidden rounded-br-[28px] rounded-tr-[28px] bg-white shadow-[4px_0_18px_rgba(60,64,67,0.18)] transition-transform duration-[250ms] ease-[cubic-bezier(0.2,0,0,1)] ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
         aria-hidden={!open}
       >
-        <div className="shrink-0">
-          <MailXLogo />
-          <div className="mx-4 mb-3 rounded-[24px] bg-[#f8fafd] px-4 py-3 dark:bg-[#202124]">
-            <div className="flex items-center gap-3">
-              <Avatar name={profile.name} src={profile.picture} className="size-10 text-xs" />
-              <div className="min-w-0 flex-1">
-                <p className="truncate text-sm font-medium text-[#202124] dark:text-[#e3e3e3]">{profile.name}</p>
-                <p className="truncate text-xs text-[#5f6368] dark:text-[#c4c7c5]">{profile.email}</p>
-              </div>
-            </div>
-            <div className="mt-3 flex gap-2">
-              <button
-                type="button"
-                className="flex h-9 flex-1 items-center justify-center gap-2 rounded-full bg-[#eaf1fb] px-3 text-xs font-medium text-[#0b57d0] transition hover:bg-[#d3e3fd] active:scale-[0.98] dark:bg-[#1d2b44] dark:text-[#a8c7fa]"
-              >
-                <Info size={16} />
-                Active Status
-              </button>
-              <button
-                type="button"
-                className="grid size-9 place-items-center rounded-full bg-[#eaf1fb] text-[#0b57d0] transition hover:bg-[#d3e3fd] active:scale-95 dark:bg-[#1d2b44] dark:text-[#a8c7fa]"
-                aria-label="Add status"
-              >
-                <Plus size={17} />
-              </button>
-            </div>
+        <header className="flex h-[88px] shrink-0 items-end border-b border-[#e0e0e0] px-6 pb-4 pt-[env(safe-area-inset-top)]">
+          <div className="font-['Google_Sans',Roboto,sans-serif] text-2xl font-normal leading-8 text-[#ea4335]">
+            Gmail
           </div>
-        </div>
+        </header>
 
-        <nav className="min-h-0 flex-1 overflow-y-auto pb-3">
-          {navItems.map(({ to, label, icon: Icon, count }) =>
-            to ? (
-              <NavLink
-                key={label}
-                to={to}
-                onClick={onClose}
-                className={({ isActive }) =>
-                  `mr-3 flex h-10 items-center gap-7 overflow-hidden rounded-r-full pl-6 pr-4 text-sm font-medium transition active:scale-[0.99] ${
-                    isActive
-                      ? 'bg-[#d3e3fd] text-[#0842a0] dark:bg-[#1d2b44] dark:text-[#a8c7fa]'
-                      : 'text-[#3c4043] hover:bg-[#f1f3f4] active:bg-[#e8eaed] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]'
-                  }`
-                }
-              >
-                <Icon size={20} />
-                <span className="min-w-0 flex-1 truncate">{label}</span>
-                {count ? <span className="text-xs font-semibold">{count}</span> : null}
-              </NavLink>
-            ) : (
-              <button
-                key={label}
-                type="button"
-                onClick={onClose}
-                className="mr-3 flex h-10 w-[calc(100%-12px)] items-center gap-7 overflow-hidden rounded-r-full pl-6 pr-4 text-left text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:scale-[0.99] active:bg-[#e8eaed] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]"
-              >
-                <Icon size={20} />
-                <span className="min-w-0 flex-1 truncate">{label}</span>
-                {count ? <span className="text-xs font-semibold">{count}</span> : null}
-              </button>
-            ),
-          )}
+        <nav className="min-h-0 flex-1 overflow-y-auto py-2">
+          <div className="mx-3 flex h-14 items-center rounded-full px-3 text-[#202124]">
+            <SymbolIcon name="inbox" />
+            <span className="ml-6 min-w-0 flex-1 truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-normal leading-6">
+              All Inboxes
+            </span>
+          </div>
+
+          <div className="mx-6 my-2 h-px bg-[#e0e0e0]" />
+
+          {categories.map((item) => (
+            <NavLink
+              key={item.label}
+              to={item.to}
+              onClick={onClose}
+              className={({ isActive }) =>
+                `mx-3 flex h-14 items-center rounded-full px-3 transition-colors duration-150 ${
+                  isActive ? 'bg-[#d3e3fd] text-[#174ea6]' : 'text-[#202124] hover:bg-[#f1f3f4] active:bg-[#e8eaed]'
+                }`
+              }
+            >
+              <SymbolIcon name={item.icon} />
+              <span className="ml-6 min-w-0 flex-1 truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-normal leading-6">
+                {item.label}
+              </span>
+              <Badge className={item.label === 'Primary' ? 'bg-[#dadce0] text-[#202124]' : item.badgeClassName}>
+                {item.badge}
+              </Badge>
+            </NavLink>
+          ))}
+
+          <SectionHeader>Recent labels</SectionHeader>
+          {recentItems.map((item) => (
+            <StaticRow key={item.label} item={item} />
+          ))}
+
+          <SectionHeader>All labels</SectionHeader>
+          {allLabelItems.map((item) => (
+            <StaticRow key={item.label} item={item} />
+          ))}
         </nav>
-
-        <div className="shrink-0 border-t border-[#e0e3e7] px-0 py-3 dark:border-[#303134]">
-          <button
-            type="button"
-            onClick={onToggleTheme}
-            className="mr-3 flex h-10 w-[calc(100%-12px)] items-center gap-7 rounded-r-full pl-6 pr-4 text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:scale-[0.99] active:bg-[#e8eaed] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]"
-          >
-            {darkMode ? <Sun size={20} /> : <Moon size={20} />}
-            <span>{darkMode ? 'Light mode' : 'Dark mode'}</span>
-          </button>
-          <button
-            type="button"
-            onClick={onLogout}
-            className="mr-3 flex h-10 w-[calc(100%-12px)] items-center gap-7 rounded-r-full pl-6 pr-4 text-sm font-medium text-[#3c4043] transition hover:bg-[#fce8e6] active:scale-[0.99] dark:text-[#e3e3e3] dark:hover:bg-[#3f201d]"
-          >
-            <AlertOctagon size={20} />
-            <span>Logout</span>
-          </button>
-        </div>
       </aside>
     </>
   )
