@@ -17,7 +17,7 @@ export function Avatar({ name, src, className = '' }: AvatarProps) {
   const color = colors[name.length % colors.length]
 
   return (
-    <div className={`grid size-10 shrink-0 place-items-center overflow-hidden rounded-full text-[20px] font-medium leading-none text-white ${color} ${className}`}>
+    <div className={`grid shrink-0 place-items-center overflow-hidden rounded-full text-[20px] font-medium leading-none text-white ${color} ${className}`} style={{width: "var(--mail-avatar)", height: "var(--mail-avatar)",}}>
       {src ? (
         <img src={src} alt="" className="size-full object-cover" referrerPolicy="no-referrer" />
       ) : (
