@@ -54,7 +54,7 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
       className="relative grid min-h-[var(--mail-row-min-height)] grid-cols-[auto_minmax(0,1fr)_auto] gap-x-[var(--mail-gap)] overflow-hidden px-[var(--mail-horizontal-padding)] py-[10px] text-left transition duration-150 before:absolute before:inset-0 before:bg-[#1a73e8]/0 before:transition before:duration-150 hover:bg-[#f8fafd] active:before:bg-[#1a73e8]/8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#1a73e8] dark:hover:bg-white/[0.04] dark:active:before:bg-white/[0.08]"
 
     >
-      <Avatar name={email.sender} className="mt-0.5 size-10 text-sm font-medium" style={{ width: "var(--mail-avatar)", height: "var(--mail-avatar)" }} />
+      <Avatar name={email.sender} className="mt-0.5 size-10 text-sm font-medium" />
 
       <div className="relative min-w-0">
         <div className="flex min-h-5 items-center">
