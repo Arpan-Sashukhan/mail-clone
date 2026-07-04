@@ -1,6 +1,6 @@
 {
-  "name": "MailX",
-  "short_name": "MailX",
+  "name": "Gmail",
+  "short_name": "Gmail",
   "description": "Native-like Gmail experience.",
   "start_url": "/inbox",
   "scope": "/",

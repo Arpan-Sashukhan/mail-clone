@@ -18,9 +18,10 @@
 --compose-size: clamp(56px, 15vw, 64px);
 
 --side-padding: clamp(12px, 4vw, 16px);
+--time-column-width:56px;
 
 --mail-avatar: clamp(40px, 10vw, 44px);
-
+--mail-row-padding-y: 10px;
 --mail-font: clamp(13px, 3.8vw, 15px);
 --subject-font: clamp(15px, 4vw, 17px);
 --body-font: clamp(14px, 4vw, 16px);
@@ -37,6 +38,25 @@
 --mail-horizontal-padding: clamp(12px, 4vw, 16px);
 
 --mail-gap: clamp(10px, 3vw, 16px);
+--gmail-surface: #ffffff;
+--gmail-background: #f8fafd;
+--gmail-primary: #1a73e8;
+
+--gmail-text-primary: #202124;
+--gmail-text-secondary: #5f6368;
+--gmail-divider: #dadce0;
+
+/* Attachment */
+--attachment-chip-height: 32px;
+--attachment-chip-max-width: 220px;
+
+--time-column-width: 56px;
+
+--star-button-size: 48px;
+
+--gmail-radius-small: 8px;
+--gmail-radius-medium: 16px;
+--gmail-radius-large: 24px;
 }
 
 :root.dark {
@@ -49,6 +69,21 @@
   box-sizing: border-box;
   -webkit-tap-highlight-color: transparent;
 }
+
+.line-clamp-1 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+}
+
+.line-clamp-2 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+}
+
 
 html,
 body,

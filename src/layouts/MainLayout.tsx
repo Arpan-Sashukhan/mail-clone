@@ -116,13 +116,30 @@ export function MainLayout() {
   }
 
   if (!profile) {
-    return <GmailLogin onLoginSuccess={setProfile} />
+    if (!profile) {
+
+    return (
+
+        <div className="gmail-app">
+
+            <GmailLogin onLoginSuccess={setProfile}/>
+
+        </div>
+
+    )
   }
 
   return (
-    <div className="min-h-svh bg-[#f8fafd] text-[#202124] dark:bg-[#202124] dark:text-[#e8eaed]">
+    <div className="gmail-app">
+    <div className="h-[env(safe-area-inset-top)] bg-inherit" />
       <OfflineBanner />
-      <Outlet context={{ openDrawer: () => setDrawerOpen(true), profile, onLogout: handleLogout }} />
+      <main className="flex-1 overflow-hidden">
+
+        <div className="gmail-scroll email-detail-enter h-full overflow-y-auto">
+
+          <Outlet context={{ openDrawer: () => setDrawerOpen(true), profile, onLogout: handleLogout }} />
+        </div>
+      </main>
       <InstallPrompt />
       <NavigationDrawer
         open={drawerOpen}
@@ -134,4 +151,5 @@ export function MainLayout() {
       />
     </div>
   )
+}
 }
