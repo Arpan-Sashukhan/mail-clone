@@ -73,7 +73,7 @@ export default function GmailLogin({ onLoginSuccess }: GmailLoginProps) {
           <img src="/favicon.svg" alt="Gmail" className="size-16" />
         </div>
 
-        <h1 className="mt-7 text-[32px] font-normal leading-10 tracking-normal text-[#202124]">MailX</h1>
+        <h1 className="mt-7 text-[32px] font-normal leading-10 tracking-normal text-[#202124]">Gmail</h1>
         <p className="mt-3 text-[17px] font-normal leading-6 text-[#202124]">Sign in with your Google Account</p>
         <p className="mx-auto mt-3 max-w-[300px] text-sm leading-6 text-[#5f6368]">
           Access your Gmail securely using Google's official authentication.
