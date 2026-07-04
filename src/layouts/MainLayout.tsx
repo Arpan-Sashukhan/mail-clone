@@ -34,6 +34,7 @@ export function MainLayout() {
 
     if (!accessToken) {
       clearGoogleSession()
+      setAuthChecking(false)
       return undefined
     }
 
@@ -55,7 +56,7 @@ export function MainLayout() {
         clearGoogleSession()
         setProfile(null)
         setAuthChecking(false)
-        navigate('/inbox', { replace: true })
+        navigate('/', { replace: true })
       })
 
     return () => {
@@ -116,16 +117,10 @@ export function MainLayout() {
   }
 
   if (!profile) {
-    if (!profile) {
-
     return (
-
-        <div className="gmail-app">
-
-            <GmailLogin onLoginSuccess={setProfile}/>
-
-        </div>
-
+      <div className="gmail-app">
+        <GmailLogin onLoginSuccess={setProfile} />
+      </div>
     )
   }
 
@@ -151,5 +146,4 @@ export function MainLayout() {
       />
     </div>
   )
-}
 }
