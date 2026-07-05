@@ -211,43 +211,53 @@ export function ComposePage() {
           </IconButton>
         </header>
 
-        <section className="px-5">
-          <div className="flex min-h-14 items-center border-b border-[#e0e3e7] text-sm dark:border-[#303134]">
-            <span className="w-12 shrink-0 text-[#5f6368] dark:text-[#c4c7c5]">To</span>
-            <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1 py-2">
+        <section className="px-5 space-y-3">
+          <div className="rounded-[24px] border border-[#dadce0] bg-[#fafafb] p-4 text-sm text-[#202124] dark:border-[#3c4043] dark:bg-[#1c1c1e] dark:text-[#e3e3e3]">
+            <div className="flex items-center justify-between gap-3">
+              <span className="font-medium text-[#3c4043] dark:text-[#e3e3e3]">From</span>
+              <button type="button" className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-2 text-sm font-medium text-[#202124] shadow-sm transition hover:bg-[#f1f3f4] dark:bg-[#242529] dark:text-[#e3e3e3] dark:hover:bg-[#2e2e33]">
+                {getStoredProfile()?.email || 'me@example.com'}
+                <ChevronDown size={16} />
+              </button>
+            </div>
+          </div>
+
+          <div className="flex items-center justify-between gap-3 rounded-[24px] border border-[#dadce0] bg-[#fafafb] px-4 py-3 text-sm text-[#202124] dark:border-[#3c4043] dark:bg-[#1c1c1e] dark:text-[#e3e3e3]">
+            <span className="font-medium text-[#3c4043] dark:text-[#e3e3e3]">To</span>
+            <div className="min-w-0 flex-1">
               {recipientChips.slice(0, 3).map((recipient) => (
-                <span key={recipient} className="max-w-[180px] truncate rounded-full bg-[#eaf1fb] px-3 py-1 text-sm text-[#0b57d0] dark:bg-[#1d2b44] dark:text-[#a8c7fa]">
+                <span key={recipient} className="mr-2 inline-flex max-w-[160px] truncate rounded-full bg-[#eaf1fb] px-3 py-1 text-sm text-[#0b57d0] dark:bg-[#1d2b44] dark:text-[#a8c7fa]">
                   {recipient}
                 </span>
               ))}
               <input
                 value={to}
                 onChange={(event) => setTo(event.target.value)}
-                className="min-w-[140px] flex-1 bg-transparent text-base text-[#202124] outline-none dark:text-[#e3e3e3]"
+                className="min-w-[140px] w-full bg-transparent text-base text-[#202124] outline-none dark:text-[#e3e3e3]"
                 inputMode="email"
                 aria-label="Recipients"
               />
             </div>
-            <button type="button" aria-label="Show CC and BCC" onClick={() => setShowCopies((value) => !value)} className="grid size-10 place-items-center rounded-full text-[#5f6368] transition hover:bg-[#f1f3f4] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]">
+            <button type="button" aria-label="Show CC and BCC" onClick={() => setShowCopies((value) => !value)} className="grid h-10 w-10 place-items-center rounded-full bg-white text-[#5f6368] transition hover:bg-[#f1f3f4] dark:bg-[#242529] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]">
               <ChevronDown size={19} className={`transition ${showCopies ? 'rotate-180' : ''}`} />
             </button>
           </div>
 
           {showCopies ? (
-            <>
-              <label className="flex min-h-14 items-center border-b border-[#e0e3e7] text-sm dark:border-[#303134]">
-                <span className="w-12 text-[#5f6368] dark:text-[#c4c7c5]">Cc</span>
+            <div className="space-y-3">
+              <label className="flex items-center gap-3 rounded-[24px] border border-[#dadce0] bg-[#fafafb] px-4 py-3 text-sm dark:border-[#3c4043] dark:bg-[#1c1c1e]">
+                <span className="w-20 font-medium text-[#3c4043] dark:text-[#e3e3e3]">Cc</span>
                 <input value={cc} onChange={(event) => setCc(event.target.value)} className="min-w-0 flex-1 bg-transparent text-base text-[#202124] outline-none dark:text-[#e3e3e3]" inputMode="email" />
               </label>
-              <label className="flex min-h-14 items-center border-b border-[#e0e3e7] text-sm dark:border-[#303134]">
-                <span className="w-12 text-[#5f6368] dark:text-[#c4c7c5]">Bcc</span>
+              <label className="flex items-center gap-3 rounded-[24px] border border-[#dadce0] bg-[#fafafb] px-4 py-3 text-sm dark:border-[#3c4043] dark:bg-[#1c1c1e]">
+                <span className="w-20 font-medium text-[#3c4043] dark:text-[#e3e3e3]">Bcc</span>
                 <input value={bcc} onChange={(event) => setBcc(event.target.value)} className="min-w-0 flex-1 bg-transparent text-base text-[#202124] outline-none dark:text-[#e3e3e3]" inputMode="email" />
               </label>
-            </>
+            </div>
           ) : null}
 
-          <label className="flex min-h-14 items-center border-b border-[#e0e3e7] text-sm dark:border-[#303134]">
-            <span className="w-20 text-[#5f6368] dark:text-[#c4c7c5]">Subject</span>
+          <label className="flex items-center gap-3 rounded-[24px] border border-[#dadce0] bg-[#fafafb] px-4 py-3 text-sm dark:border-[#3c4043] dark:bg-[#1c1c1e]">
+            <span className="w-20 font-medium text-[#3c4043] dark:text-[#e3e3e3]">Subject</span>
             <input value={subject} onChange={(event) => setSubject(event.target.value)} className="min-w-0 flex-1 bg-transparent text-base text-[#202124] outline-none dark:text-[#e3e3e3]" />
           </label>
         </section>

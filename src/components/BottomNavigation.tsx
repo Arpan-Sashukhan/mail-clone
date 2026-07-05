@@ -1,12 +1,5 @@
 import { Link, useLocation } from 'react-router-dom'
-
-function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
-  return (
-    <span aria-hidden="true" className={`material-symbols-rounded text-2xl leading-none ${className}`}>
-      {name}
-    </span>
-  )
-}
+import { Inbox, MessageSquare, Video, Bookmark } from 'lucide-react'
 
 export function BottomNavigation() {
   const location = useLocation()
@@ -17,31 +10,52 @@ export function BottomNavigation() {
   }
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-10 border-t border-[#e8eaed] bg-white pb-[env(safe-area-inset-bottom)] text-[#5f6368]" aria-label="Primary navigation">
-      <div className="mx-auto grid h-20 max-w-2xl grid-cols-2">
+    <nav className="fixed inset-x-0 bottom-0 z-10 gmail-bottom-nav pb-[env(safe-area-inset-bottom)] text-[#5f6368]" aria-label="Primary navigation">
+      <div className="mx-auto grid h-16 max-w-2xl grid-cols-5 items-center">
         <Link
           to="/inbox"
-          className="flex min-w-0 flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-xs font-medium leading-4"
+          className={`nav-item flex flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-[11px] font-medium leading-4 transition-colors ${mailActive ? 'selected' : ''}`}
+          aria-label="Inbox"
         >
-          <span className={`relative grid h-8 w-16 place-items-center rounded-[20px] transition-colors ${mailActive ? 'bg-[#d3e3fd] text-[#174ea6]' : 'text-[#5f6368]'}`}>
-            <SymbolIcon name="mail" /> 
-            <span className="absolute right-[13px] top-[-4px] flex h-5 min-w-5 items-center justify-center rounded-[10px] bg-[#c5221f] px-1 text-[11px] font-medium leading-none text-white shadow-[0_0_0_1px_white]">
-              99+
-            </span>
-          </span>
-         
+          <Inbox size={22} strokeWidth={1.8} className={`nav-icon ${mailActive ? 'fill-[#1A73E8]' : ''}`} />
+          <span className="mt-1">Inbox</span>
         </Link>
 
         <button
           type="button"
+          className="nav-item flex flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-[11px] font-medium leading-4 text-[#5f6368]"
+          aria-label="Chat"
+        >
+          <MessageSquare size={22} strokeWidth={1.8} className="nav-icon" />
+          <span className="mt-1">Chat</span>
+        </button>
+
+        <button
+          type="button"
           onClick={openMeet}
-          className="flex min-w-0 flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-xs font-medium leading-4 text-[#5f6368]"
+          className="nav-item flex flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-[11px] font-medium leading-4 text-[#5f6368]"
           aria-label="Meet"
         >
-          <span className="grid h-8 w-16 place-items-center rounded-[20px]">
-            <SymbolIcon name="videocam" />
-          </span>
-          
+          <Video size={22} strokeWidth={1.8} className="nav-icon" />
+          <span className="mt-1">Meet</span>
+        </button>
+
+        <Link
+          to="/inbox"
+          className="nav-item flex flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-[11px] font-medium leading-4 text-[#5f6368]"
+          aria-label="Primary"
+        >
+          <Inbox size={22} strokeWidth={1.8} className="nav-icon" />
+          <span className="mt-1">Primary</span>
+        </Link>
+
+        <button
+          type="button"
+          className="nav-item flex flex-col items-center justify-center pt-2 pb-3 font-['Google_Sans',Roboto,sans-serif] text-[11px] font-medium leading-4 text-[#5f6368]"
+          aria-label="Labels"
+        >
+          <Bookmark size={22} strokeWidth={1.8} className="nav-icon" />
+          <span className="mt-1">Labels</span>
         </button>
       </div>
     </nav>

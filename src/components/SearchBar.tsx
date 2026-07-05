@@ -49,7 +49,7 @@ function AccountAvatar({ name, src, size = 'size-12', textSize = 'text-base' }: 
   return <Avatar name={name} src={src} className={`${size} ${textSize}`} />
 }
 
-export function SearchBar({ profile, onOpenDrawer, searchValue = '', onSearchChange, searching = false }: SearchBarProps) {
+export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', onSearchChange, searching = false }: SearchBarProps) {
   const [accountOpen, setAccountOpen] = useState(false)
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -80,22 +80,22 @@ export function SearchBar({ profile, onOpenDrawer, searchValue = '', onSearchCha
   }, [accountOpen])
 
   return (
-    <header className="sticky top-0 z-20 bg-white/96 px-2 pb-2 pt-[max(8px,env(safe-area-inset-top))] backdrop-blur dark:bg-[#202124]/95">
-      <div className="relative flex h-14 items-center rounded-[28px] bg-[#eef3fd] px-2 shadow-[0_1px_2px_rgba(60,64,67,0.18)] transition-shadow duration-200 focus-within:shadow-[0_2px_5px_rgba(60,64,67,0.18)] dark:bg-[#303134] dark:shadow-black/25">
+    <header className="sticky top-0 z-20 bg-white pb-2 pt-[max(8px,env(safe-area-inset-top))] gmail-search">
+      <div className="relative gmail-search-inner">
         <IconButton label="Open navigation" onClick={onOpenDrawer} className="size-12">
-          <Menu size={24} />
+          <Menu size={20} />
         </IconButton>
         {searching ? (
           <span className="ml-2 size-6 shrink-0 animate-spin rounded-full border-2 border-[#1a73e8] border-t-transparent" aria-hidden="true" />
         ) : (
-          <Search size={24} className="ml-2 shrink-0 text-[#5f6368] dark:text-[#c4c7c5]" aria-hidden="true" />
+          <Search size={20} className="ml-2 shrink-0 text-[#5f6368] dark:text-[#c4c7c5]" aria-hidden="true" />
         )}
         <input
           aria-label="Search emails"
           placeholder="Search in emails"
           value={searchValue}
           onChange={(event) => onSearchChange?.(event.target.value)}
-          className="h-full min-w-0 flex-1 bg-transparent pl-4 pr-2 text-[22px] font-normal leading-none text-[#202124] outline-none placeholder:text-[#5f6368] dark:text-[#e3e3e3] dark:placeholder:text-[#c4c7c5]"
+          className="gmail-search-input h-full min-w-0 flex-1 bg-transparent pl-4 pr-2 text-[14px] font-normal leading-none text-[#202124] outline-none placeholder:text-[#5f6368]"
         />
         <div ref={menuRef} className="relative shrink-0">
           <button
@@ -105,7 +105,7 @@ export function SearchBar({ profile, onOpenDrawer, searchValue = '', onSearchCha
             onClick={() => setAccountOpen((value) => !value)}
             className="grid size-12 shrink-0 place-items-center rounded-full transition duration-150 hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a73e8] active:scale-95 active:bg-black/10 dark:hover:bg-white/[0.08]"
           >
-            <Avatar name={profile.name} src={profile.picture} className="size-10 text-xs shadow-[0_0_0_2px_white] dark:shadow-[0_0_0_2px_#303134]" />
+            <Avatar name={profile.name} src={profile.picture} className="gmail-avatar size-8 text-xs shadow-[0_0_0_2px_white]" />
           </button>
 
           <div
@@ -183,6 +183,20 @@ export function SearchBar({ profile, onOpenDrawer, searchValue = '', onSearchCha
             <button type="button" className="flex h-14 w-full items-center px-6 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
               <SymbolIcon name="manage_accounts" />
               <span className="ml-4 font-['Google_Sans',Roboto,sans-serif] text-[17px] font-normal leading-6 text-[#202124]">Manage accounts on this device</span>
+            </button>
+
+            <div className="h-px bg-[#e8eaed]" />
+
+            <button
+              type="button"
+              onClick={() => {
+                setAccountOpen(false)
+                onLogout()
+              }}
+              className="flex h-14 w-full items-center px-6 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]"
+            >
+              <SymbolIcon name="logout" />
+              <span className="ml-4 font-['Google_Sans',Roboto,sans-serif] text-[17px] font-normal leading-6 text-[#202124]">Sign out</span>
             </button>
 
             <div className="h-px bg-[#e8eaed]" />

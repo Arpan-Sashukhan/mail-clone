@@ -42,6 +42,7 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
   const [searchInput, setSearchInput] = useState('')
   const [searchQuery, setSearchQuery] = useState('')
   const [pullDistance, setPullDistance] = useState(0)
+  const [fabCompact, setFabCompact] = useState(false)
   const pullStartY = useRef<number | null>(null)
 
   useEffect(() => {
@@ -55,36 +56,41 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
 
   const inboxRef = useRef<HTMLElement>(null)
 
-function handleTouchEnd() {
-  if (pullDistance > 56 && !refreshing) {
-    void refresh()
+  function handleTouchEnd() {
+    if (pullDistance > 56 && !refreshing) {
+      void refresh()
+    }
+
+    pullStartY.current = null
+    setPullDistance(0)
   }
 
-  pullStartY.current = null
-  setPullDistance(0)
-}
-
-function handleTouchStart(event: TouchEvent<HTMLElement>) {
-  if ((inboxRef.current?.scrollTop ?? 0) <= 0) {
-    pullStartY.current = event.touches[0]?.clientY ?? null
-  }
-}
-
-function handleTouchMove(event: TouchEvent<HTMLElement>) {
-  if (
-    pullStartY.current === null ||
-    (inboxRef.current?.scrollTop ?? 0) > 0
-  ) {
-    return
+  function handleTouchStart(event: TouchEvent<HTMLElement>) {
+    if ((inboxRef.current?.scrollTop ?? 0) <= 0) {
+      pullStartY.current = event.touches[0]?.clientY ?? null
+    }
   }
 
-  const nextDistance = Math.max(
-    0,
-    (event.touches[0]?.clientY ?? pullStartY.current) - pullStartY.current
-  )
+  function handleTouchMove(event: TouchEvent<HTMLElement>) {
+    if (
+      pullStartY.current === null ||
+      (inboxRef.current?.scrollTop ?? 0) > 0
+    ) {
+      return
+    }
 
-  setPullDistance(Math.min(nextDistance * 0.45, 72))
-}
+    const nextDistance = Math.max(
+      0,
+      (event.touches[0]?.clientY ?? pullStartY.current) - pullStartY.current
+    )
+
+    setPullDistance(Math.min(nextDistance * 0.45, 72))
+  }
+
+  function handleScroll() {
+    const nextCompact = (inboxRef.current?.scrollTop ?? 0) > 72
+    setFabCompact(nextCompact)
+  }
 
   if (settingsView) {
     return (
@@ -108,11 +114,11 @@ function handleTouchMove(event: TouchEvent<HTMLElement>) {
     <main
       ref={inboxRef}
       className="gmail-scroll gmail-inbox bg-white dark:bg-[#202124]"
+      onScroll={handleScroll}
       onTouchStart={handleTouchStart}
       onTouchMove={handleTouchMove}
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
-    
     >
     <div className="sticky top-0 z-40 bg-inherit pt-[env(safe-area-inset-top)]">
       <SearchBar
@@ -133,10 +139,10 @@ function handleTouchMove(event: TouchEvent<HTMLElement>) {
         {showPullIndicator ? <span className="size-6 animate-spin rounded-full border-2 border-[#1a73e8] border-t-transparent" /> : null}
       </div>
 
-      <section className="sticky top-[calc(env(safe-area-inset-top)+var(--header-height))] z-20 bg-inherit px-[var(--side-padding)] pt-3 pb-2">
-        <h1 className="text-[16px] font-medium leading-5 tracking-normal text-[#3c4043] dark:text-[#e3e3e3]">{mailboxTitles[mailbox]}</h1>
+      <section className="sticky top-[calc(env(safe-area-inset-top)+var(--header-height))] z-20 bg-inherit px-4 pt-1 pb-1">
+        <h1 className="text-[12px] font-medium not-italic text-[#5f6368] pl-4 pt-1 pb-1">{mailboxTitles[mailbox]}</h1>
       </section>
-      <section className="divide-y divide-[#eceff1] dark:divide-[#303134]" aria-label={`${mailboxTitles[mailbox]} emails`}>
+      <section className="divide-y divide-transparent dark:divide-transparent" aria-label={`${mailboxTitles[mailbox]} emails`}>
         {loading ? (
           <div className="space-y-1 px-[var(--side-padding)] py-[var(--mail-row-padding-y)]">
             {Array.from({ length: 6 }).map((_, index) => (
@@ -189,8 +195,7 @@ function handleTouchMove(event: TouchEvent<HTMLElement>) {
         )}
       </section>
       <div className="fixed bottom-[calc(var(--bottom-nav-height)+16px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-50">
-
-        <ComposeButton />
+        <ComposeButton compact={fabCompact} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center bg-inherit pb-[env(safe-area-inset-bottom)]">
         <div className="w-full max-w-[480px]">

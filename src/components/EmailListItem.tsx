@@ -1,5 +1,5 @@
-import { memo } from 'react'
-import { FileText, Star } from 'lucide-react'
+import { memo, useEffect, useRef, useState } from 'react'
+import { FileText, MoreVertical, Star } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Avatar } from './Avatar'
 import type { Email } from '../types/email'
@@ -42,8 +42,36 @@ function Highlight({ value, query }: { value: string; query?: string }) {
 }
 
 function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListItemProps) {
+  const [menuOpen, setMenuOpen] = useState(false)
+  const menuRef = useRef<HTMLDivElement>(null)
   const hasAttachments = Boolean(email.attachments?.length)
   const isDraft = email.labels?.some((label) => label.toLowerCase() === 'draft')
+
+  useEffect(() => {
+    if (!menuOpen) {
+      return undefined
+    }
+
+    function handlePointerDown(event: PointerEvent) {
+      if (!menuRef.current?.contains(event.target as Node)) {
+        setMenuOpen(false)
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === 'Escape') {
+        setMenuOpen(false)
+      }
+    }
+
+    document.addEventListener('pointerdown', handlePointerDown)
+    document.addEventListener('keydown', handleKeyDown)
+
+    return () => {
+      document.removeEventListener('pointerdown', handlePointerDown)
+      document.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [menuOpen])
 
   return (
     <Link
@@ -52,54 +80,92 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
       onClick={() => {
         localStorage.setItem('selected_email', JSON.stringify(email))
       }}
-      className="gmail-mail-item relative grid grid-cols-[auto_minmax(0,1fr)_auto] gap-x-[var(--mail-gap)] overflow-hidden px-[var(--mail-horizontal-padding)] py-[var(--mail-row-padding-y)] text-left transition duration-150 before:pointer-events-none before:absolute before:inset-0 before:bg-[#1a73e8]/0 before:transition before:duration-150 hover:bg-[#f8fafd] active:bg-[#edf2fa] active:before:bg-[#1a73e8]/8 focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#1a73e8] dark:hover:bg-white/[0.04] dark:active:bg-white/[0.06] dark:active:before:bg-white/[0.08]"
-
+      className="gmail-mail-item relative grid grid-cols-[var(--mail-avatar)_minmax(0,1fr)_var(--time-column-compact)] gap-3 overflow-hidden bg-white text-left transition duration-150 hover:bg-[#F8FAFD] active:bg-[#EDF2FA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#1a73e8]"
     >
-      <Avatar name={email.sender} className="mail-avatar mt-px text-sm font-medium" />
+      <Avatar name={email.sender} className="mail-avatar text-[16px] font-medium" />
 
-      <div className="flex min-w-0 flex-col">
-        <div className="flex min-h-5 items-center">
-          <p
-            className={`line-clamp-1 text-[length:var(--sender-font)] leading-[1.3] tracking-normal dark:text-[#e3e3e3] ${
-              email.read ? 'font-medium text-[#3c4043]' : 'font-semibold text-[#202124]'
-            }`}
-          >
-            <Highlight value={email.sender} query={searchQuery} />
-          </p>
+      <div className="flex min-w-0 flex-col gap-1">
+        <div className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p
+              className={`truncate text-[14px] leading-[1.3] tracking-normal text-[#202124] ${
+                email.read ? 'font-medium' : 'font-semibold'
+              }`}
+            >
+              <Highlight value={email.sender} query={searchQuery} />
+            </p>
+          </div>
+
+          <div className="relative" ref={menuRef}>
+            <button
+              type="button"
+              aria-label="Open email options"
+              onClick={(event) => {
+                event.preventDefault()
+                event.stopPropagation()
+                setMenuOpen((value) => !value)
+              }}
+              className="grid h-9 w-9 place-items-center rounded-full text-[#5f6368] transition hover:bg-[#f1f3f4] active:scale-95 dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
+            >
+              <MoreVertical size={18} />
+            </button>
+            <div
+              className={`absolute right-0 top-[calc(100%+6px)] z-50 w-[220px] overflow-hidden rounded-[20px] bg-white text-[#202124] shadow-[0_10px_32px_rgba(60,64,67,0.18)] transition duration-180 ease-[cubic-bezier(0.2,0,0,1)] ${
+                menuOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-[0.96] opacity-0'
+              }`}
+              role="menu"
+              aria-label="Email options"
+            >
+              {[
+                'Move to',
+                'Snooze',
+                'Change labels',
+                'Mark important',
+                'Unsubscribe',
+                'Mute',
+                'Print',
+                'Report spam',
+                'Add to Tasks',
+                'Help & feedback',
+              ].map((item) => (
+                <button
+                  key={item}
+                  type="button"
+                  onClick={(event) => {
+                    event.preventDefault()
+                    event.stopPropagation()
+                    setMenuOpen(false)
+                  }}
+                  className="w-full px-4 py-3 text-left text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]"
+                >
+                  {item}
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
 
-        <p className={ `line-clamp-1 mt-px overflow-hidden text-[length:var(--subject-font)] leading-[1.3] tracking-normal text-[#202124] dark:text-[#e3e3e3] ${
-            email.read ? 'font-normal' : 'font-semibold'
-          }`}
-        >
-          {isDraft ? <span className="font-medium text-[#d93025]">Draft </span> : null}
-          <Highlight value={email.subject} query={searchQuery} />
-        </p>
-
-        <p className="line-clamp-2 mt-px overflow-hidden text-[length:var(--preview-font)] leading-[1.4] tracking-normal text-[#5f6368] dark:text-[#c4c7c5]">
-          <Highlight value={email.preview} query={searchQuery} />
-        </p>
-
-        {hasAttachments ? (
-          <div className="mt-1 flex min-w-0">
-            <span className="inline-flex h-[var(--attachment-chip-height)] max-w-[var(--attachment-chip-max-width)] items-center gap-1.5 rounded-full border border-[#dadce0] px-[clamp(10px,3vw,14px)] text-xs font-medium text-[#5f6368] dark:border-[#5f6368] dark:text-[#c4c7c5]">
-              <FileText size={15} strokeWidth={1.8} />
-              <span className="truncate">{email.attachments?.[0]?.filename}</span>
-            </span>
-          </div>
-        ) : null}
+        <div>
+          <p className={`truncate text-[14px] leading-[1.3] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
+            {isDraft ? <span className="font-medium text-[#d93025]">Draft </span> : null}
+            <Highlight value={email.subject} query={searchQuery} />
+          </p>
+          <p className="line-clamp-1 mt-1 overflow-hidden text-[13px] leading-[1.2] tracking-normal text-[#5f6368] gmail-preview">
+            <Highlight value={email.preview} query={searchQuery} />
+          </p>
+          {hasAttachments ? (
+            <div className="mt-2 flex min-w-0">
+              <span className="attachment-chip inline-flex items-center gap-1.5">
+                <FileText size={15} strokeWidth={1.8} />
+                <span className="truncate">{email.attachments?.[0]?.filename}</span>
+              </span>
+            </div>
+          ) : null}
+        </div>
       </div>
 
-      <div className="relative flex min-w-0 flex-col items-end justify-start gap-2 pt-px">
-        <span
-          className={`w-[var(--time-column-width)] text-right truncate text-[length:var(--time-font)] leading-[1.3] tracking-normal text-[#5f6368] dark:text-[#c4c7c5] ${
-            email.read
-              ? 'font-medium'
-              : 'font-semibold'
-          }`}
-        >
-          {email.timestamp}
-        </span>
+      <div className="relative flex min-w-0 flex-col items-end justify-between gap-2 pt-px">
+        <span className={`gmail-time truncate ${email.read ? 'font-medium' : 'font-semibold'}`}>{email.timestamp}</span>
 
         <button
           type="button"
@@ -109,7 +175,7 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
             event.stopPropagation()
             onToggleStar?.(email.id)
           }}
-          className="grid size-[var(--star-button-size)] place-items-center rounded-full text-[#bdc1c6] transition duration-150 hover:bg-[#f1f3f4] hover:text-[#fbc02d] active:scale-90 transition-transform active:bg-[#feefc3] dark:text-[#5f6368] dark:hover:bg-white/[0.08]"
+          className="gmail-star-btn text-[#bdc1c6] transition duration-150 hover:bg-[#F1F3F4] active:scale-90"
         >
           <Star
             size={20}
