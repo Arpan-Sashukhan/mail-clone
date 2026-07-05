@@ -3,12 +3,66 @@ import { Inbox } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TouchEvent } from 'react'
 import { BottomNavigation } from '../components/BottomNavigation'
+import { CategoryCard } from '../components/CategoryCard'
 import { ComposeButton } from '../components/ComposeButton'
 import { EmailListItem } from '../components/EmailListItem'
 import { SearchBar } from '../components/SearchBar'
 import { useEmails } from '../hooks/useEmails'
-import type { Mailbox } from '../types/email'
+import type { Email, Mailbox } from '../types/email'
 import type { GoogleProfile } from '../services/googleProfile'
+
+type EmailCategory = 'social' | 'promotions' | 'primary'
+
+type InboxRow =
+  | { kind: 'email'; email: Email }
+  | { kind: 'category'; category: 'social' | 'promotions'; emails: Email[] }
+
+function getEmailCategory(email: Email): EmailCategory {
+  const raw = (email.category || '').toLowerCase()
+
+  if (raw === 'social' || raw === 'promotions') {
+    return raw
+  }
+
+  const labels = (email.labels || []).map((label) => label.toLowerCase())
+
+  if (labels.includes('social')) {
+    return 'social'
+  }
+
+  if (labels.includes('promotions')) {
+    return 'promotions'
+  }
+
+  return 'primary'
+}
+
+function buildInboxRows(emails: Email[]): InboxRow[] {
+  const rows: InboxRow[] = []
+  const seen = new Set<'social' | 'promotions'>()
+
+  for (const email of emails) {
+    const category = getEmailCategory(email)
+
+    if (category === 'social' || category === 'promotions') {
+      if (seen.has(category)) {
+        continue
+      }
+
+      seen.add(category)
+      rows.push({
+        kind: 'category',
+        category,
+        emails: emails.filter((item) => getEmailCategory(item) === category),
+      })
+      continue
+    }
+
+    rows.push({ kind: 'email', email })
+  }
+
+  return rows
+}
 
 interface InboxPageProps {
   mailbox: Mailbox
@@ -53,6 +107,11 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
   const { emails, loading, refreshing, error, refresh, updateEmail } = useEmails(mailbox, searchQuery)
   const searching = useMemo(() => searchInput !== searchQuery || (Boolean(searchQuery) && loading), [loading, searchInput, searchQuery])
   const showPullIndicator = refreshing || pullDistance > 8
+
+  const rows = useMemo<InboxRow[]>(
+    () => (mailbox === 'inbox' ? buildInboxRows(emails) : emails.map((email) => ({ kind: 'email' as const, email }))),
+    [emails, mailbox],
+  )
 
   const inboxRef = useRef<HTMLElement>(null)
 
@@ -184,14 +243,18 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
             </div>
           </div>
         ) : (
-          emails.map((email) => (
-            <EmailListItem
-              key={email.id}
-              email={email}
-              searchQuery={searchQuery}
-              onToggleStar={(id) => updateEmail(id, (current) => ({ ...current, starred: !current.starred }))}
-            />
-          ))
+          rows.map((row) =>
+            row.kind === 'category' ? (
+              <CategoryCard key={row.category} category={row.category} emails={row.emails} />
+            ) : (
+              <EmailListItem
+                key={row.email.id}
+                email={row.email}
+                searchQuery={searchQuery}
+                onToggleStar={(id) => updateEmail(id, (current) => ({ ...current, starred: !current.starred }))}
+              />
+            ),
+          )
         )}
       </section>
       <div className="fixed bottom-[calc(var(--bottom-nav-height)+16px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-50">

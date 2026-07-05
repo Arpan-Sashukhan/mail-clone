@@ -215,18 +215,12 @@ export function EmailDetailPage() {
 
         <div className="flex-1" />
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
           <IconButton label="Archive" className="size-6 text-[#5f6368]">
             <SymbolIcon name="archive" className="text-2xl" />
           </IconButton>
-          <IconButton label="Delete" className="size-6 text-[#5f6368]">
-            <SymbolIcon name="delete" className="text-2xl" />
-          </IconButton>
           <IconButton label="Mark unread" className="size-6 text-[#5f6368]">
             <SymbolIcon name="mail" className="text-2xl" />
-          </IconButton>
-          <IconButton label="Move" className="size-6 text-[#5f6368]">
-            <SymbolIcon name="drive_file_move" className="text-2xl" />
           </IconButton>
           <div className="relative" ref={menuRef}>
             <IconButton label="More options" onClick={() => setMenuOpen((value) => !value)} className="size-6 text-[#5f6368]">
@@ -242,6 +236,7 @@ export function EmailDetailPage() {
                 ['Reply All', 'reply_all'],
                 ['Forward', 'forward'],
                 [starred ? 'Remove Star' : 'Add Star', 'star'],
+                ['Delete', 'delete'],
                 ['Move', 'drive_file_move'],
                 ['Labels', 'label'],
                 ['Mark unread', 'mail'],
@@ -250,7 +245,6 @@ export function EmailDetailPage() {
                 ['Report phishing', 'gpp_maybe'],
                 ['Block sender', 'block'],
                 ['Mute conversation', 'inbox'],
-                ['Delete forever', 'delete'],
               ].map(([label, icon]) => (
                 <button
                   key={label}
@@ -374,7 +368,7 @@ export function EmailDetailPage() {
             </section>
           ) : null}
 
-          <div className="mx-6 mt-10 grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <div className="mx-6 mt-10 grid grid-cols-3 gap-2">
             <Link to="/compose" state={{ mode: 'reply', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
               <SymbolIcon name="reply" className="text-[18px]" />
               Reply
