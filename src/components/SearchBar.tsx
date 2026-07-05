@@ -80,7 +80,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
   }, [accountOpen])
 
   return (
-    <header className="sticky top-0 z-20 bg-white pb-2 pt-[max(8px,env(safe-area-inset-top))] gmail-search">
+    <header className="sticky top-0 z-20 bg-white pt-[max(8px,env(safe-area-inset-top))] gmail-search">
       <div className="relative gmail-search-inner">
         <IconButton label="Open navigation" onClick={onOpenDrawer} className="size-12">
           <Menu size={20} />
@@ -95,7 +95,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
           placeholder="Search in emails"
           value={searchValue}
           onChange={(event) => onSearchChange?.(event.target.value)}
-          className="gmail-search-input h-full min-w-0 flex-1 bg-transparent pl-4 pr-2 text-[14px] font-normal leading-none text-[#202124] outline-none placeholder:text-[#5f6368]"
+          className="gmail-search-input h-full min-w-0 flex-1 bg-transparent pl-2 pr-2 text-[16px] font-normal leading-none text-[#202124] outline-none placeholder:text-[#5f6368]"
         />
         <div ref={menuRef} className="relative shrink-0">
           <button

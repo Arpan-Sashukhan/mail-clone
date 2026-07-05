@@ -207,7 +207,7 @@ export function EmailDetailPage() {
   )
 
   return (
-    <main className="gmail-scroll mx-auto min-h-svh max-w-[720px] bg-white pb-10 dark:bg-[#202124]">
+    <main className="gmail-scroll min-h-svh w-full bg-white pb-10 dark:bg-[#202124]">
       <header className="sticky top-0 z-20 flex h-16 items-center border-b border-[#ececec] bg-white px-4 pt-[env(safe-area-inset-top)] dark:border-[#303134] dark:bg-[#202124]">
         <IconButton label="Back" onClick={() => navigate(-1)} className="size-6 text-[#5f6368]">
           <SymbolIcon name="arrow_back" className="text-2xl" />

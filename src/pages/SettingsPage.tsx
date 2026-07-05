@@ -87,7 +87,7 @@ export function SettingsPage() {
   const { settings, updateSetting } = useSettings()
 
   return (
-    <main className="gmail-scroll mx-auto min-h-svh max-w-2xl bg-[#f8fafd] pb-12 dark:bg-[#202124]">
+    <main className="gmail-scroll min-h-svh w-full bg-[#f8fafd] pb-12 dark:bg-[#202124]">
       <SearchBar profile={profile} onOpenDrawer={openDrawer} onLogout={onLogout} />
       <section className="px-5 pb-1 pt-4">
         <h1 className="text-[28px] font-normal leading-9 text-[#202124] dark:text-[#e8eaed]">Settings</h1>

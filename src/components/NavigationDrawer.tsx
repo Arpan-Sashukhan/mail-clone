@@ -131,7 +131,7 @@ function DrawerItem({ item, isSelected, onClick }: DrawerItemProps) {
         rounded-r-[24px] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#0B57D0]
         ${
           isSelected
-            ? 'bg-[#C2E7FF] text-[#202124] font-500'
+            ? 'bg-[#D3E3FD] text-[#202124] font-500'
             : 'text-[#202124] font-400 hover:bg-[#F1F3F4] active:bg-[#E8EAED]'
         }
       `}
@@ -235,7 +235,7 @@ export function NavigationDrawer({ open, onClose }: NavigationDrawerProps) {
 
       {/* Drawer */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 flex w-80 max-w-[85vw] transform flex-col bg-white shadow-[0_8px_24px_rgba(60,64,67,0.30)] transition-transform duration-[240ms] ease-[cubic-bezier(0.2,0,0,1)] ${
+        className={`fixed inset-y-0 left-0 z-40 flex w-[280px] max-w-[85vw] transform flex-col bg-white shadow-[0_8px_24px_rgba(60,64,67,0.30)] transition-transform duration-[240ms] ease-[cubic-bezier(0.2,0,0,1)] ${
           open ? 'translate-x-0' : '-translate-x-full'
         }`}
         role="navigation"

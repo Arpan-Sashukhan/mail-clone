@@ -126,12 +126,10 @@ export function MainLayout() {
 
   return (
     <div className="gmail-app">
-    <div className="h-[env(safe-area-inset-top)] bg-inherit" />
+      <div className="h-[env(safe-area-inset-top)] bg-inherit" />
       <OfflineBanner />
       <main className="flex-1 overflow-hidden">
-
         <div className="gmail-scroll email-detail-enter h-full overflow-y-auto">
-
           <Outlet context={{ openDrawer: () => setDrawerOpen(true), profile, onLogout: handleLogout }} />
         </div>
       </main>

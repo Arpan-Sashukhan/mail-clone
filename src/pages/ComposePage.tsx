@@ -182,7 +182,7 @@ export function ComposePage() {
   }
 
   return (
-    <main className="compose-motion gmail-scroll mx-auto min-h-svh max-w-2xl bg-white dark:bg-[#202124]">
+    <main className="compose-motion gmail-scroll min-h-svh w-full bg-white dark:bg-[#202124]">
       <form onSubmit={handleSubmit} className="flex min-h-svh flex-col">
         <header className="sticky top-0 z-20 flex h-16 items-center gap-1 bg-white/96 px-2 pt-[env(safe-area-inset-top)] shadow-[0_1px_2px_rgba(60,64,67,0.08)] backdrop-blur dark:bg-[#202124]/95">
           <IconButton label="Close compose" onClick={() => (to || subject || body ? setConfirmDiscard(true) : navigate(-1))}>

@@ -197,10 +197,8 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
       <div className="fixed bottom-[calc(var(--bottom-nav-height)+16px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-50">
         <ComposeButton compact={fabCompact} />
       </div>
-      <div className="fixed bottom-0 left-0 right-0 z-40 flex justify-center bg-inherit pb-[env(safe-area-inset-bottom)]">
-        <div className="w-full max-w-[480px]">
-            <BottomNavigation />
-        </div>
+      <div className="fixed bottom-0 left-0 right-0 z-40 bg-inherit pb-[env(safe-area-inset-bottom)]">
+        <BottomNavigation />
       </div>
     </main>
   )
