@@ -58,7 +58,7 @@ export function MessageDetails({ email }: MessageDetailsProps) {
         <div>
           <p>Standard encryption (TLS).</p>
           
-            href="https://support.google.com/mail/answer/6330403"
+            <a href="https://support.google.com/mail/answer/6330403"
             target="_blank"
             rel="noreferrer"
             className="mt-2 inline-block text-base font-normal leading-6 text-[#1a73e8]"
