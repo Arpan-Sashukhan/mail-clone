@@ -24,7 +24,7 @@ type AccountRow = {
 const secondaryAccounts: AccountRow[] = [
   { name: 'Arpan Sadhukhan', email: 'arpan_pg_23@cse.nits.ac.in', unread: '99+', color: '#7baaf7' },
   { name: 'Arpan Sadhukhan', email: 'mailtosadhukhan@gmail.com', unread: '99+', color: '#ee6a5f' },
-  { name: 'ARPAN SADHUKHAN', email: 'arpan40432@paruluniv.ac.in', unread: '99+', color: '#8d6e63' },
+  { name: 'ARPAN SADHUKHAN', email: 'arpan40432@paruluniversity.ac.in', unread: '99+', color: '#8d6e63' },
 ]
 
 function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
