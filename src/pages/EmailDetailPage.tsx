@@ -1,4 +1,5 @@
 import {
+  ChevronDown,
   Download,
   Eye,
   File,
@@ -87,6 +88,7 @@ export function EmailDetailPage() {
   const [error, setError] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
   const [starred, setStarred] = useState(false)
+  const [detailsOpen, setDetailsOpen] = useState(false)
   const [attachmentData, setAttachmentData] = useState<Record<string, string>>({})
   const menuRef = useRef<HTMLDivElement>(null)
 
@@ -313,9 +315,22 @@ export function EmailDetailPage() {
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 text-left">
                   <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-semibold leading-6 text-[#202124] dark:text-[#e3e3e3]">{email.sender}</p>
-                  <p className="mt-0.5 truncate text-[15px] font-normal leading-5 text-[#5f6368] dark:text-[#c4c7c5]">
-                    to me • {email.senderEmail}
-                  </p>
+                  <button
+                    type="button"
+                    onClick={() => setDetailsOpen((value) => !value)}
+                    aria-expanded={detailsOpen}
+                    aria-label={detailsOpen ? 'Hide sender and recipient details' : 'Show sender and recipient details'}
+                    className="mt-0.5 flex max-w-full items-center gap-1 rounded text-left transition hover:text-[#202124] dark:hover:text-[#e3e3e3]"
+                  >
+                    <span className="truncate text-[15px] font-normal leading-5 text-[#5f6368] dark:text-[#c4c7c5]">
+                      to me • {email.senderEmail}
+                    </span>
+                    <ChevronDown
+                      size={16}
+                      strokeWidth={2}
+                      className={`shrink-0 text-[#5f6368] transition-transform duration-150 dark:text-[#c4c7c5] ${detailsOpen ? 'rotate-180' : ''}`}
+                    />
+                  </button>
                 </div>
 
                 <div className="flex shrink-0 items-center gap-4 pt-0.5">
@@ -333,7 +348,7 @@ export function EmailDetailPage() {
             </div>
           </section>
 
-          <MessageDetails email={email} />
+          {detailsOpen ? <MessageDetails email={email} /> : null}
 
           <div
             className="gmail-message-body mx-6 mt-8 overflow-x-auto font-['Roboto',Arial,sans-serif] text-base font-normal leading-7 text-[#202124] dark:text-[#e3e3e3]"
