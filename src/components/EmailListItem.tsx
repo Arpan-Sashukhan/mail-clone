@@ -56,10 +56,10 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
     >
       <Avatar name={email.sender} className="mail-avatar text-[16px] font-medium" />
 
-      <div className="flex min-w-0 flex-col gap-1">
+      <div className="flex min-w-0 flex-col gap-0.5">
         <div className="min-w-0">
           <p
-            className={`truncate font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.3] tracking-normal text-[#202124] ${
+            className={`gmail-sender truncate font-['Roboto',Arial,sans-serif] leading-[18px] tracking-normal text-[#202124] ${
               email.read ? 'font-medium' : 'font-semibold'
             }`}
           >
@@ -68,15 +68,15 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
         </div>
 
         <div className="min-w-0">
-          <p className={`truncate font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.3] tracking-normal ${email.read ? 'font-normal text-[#5f6368]' : 'font-semibold text-[#202124]'}`}>
+          <p className={`gmail-subject truncate font-['Roboto',Arial,sans-serif] leading-[18px] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
             {isDraft ? <span className="font-medium text-[#d93025]">Draft </span> : null}
-            <span className={email.read ? '' : 'text-[#202124]'}>
-              <Highlight value={email.subject} query={searchQuery} />
-            </span>
-            <span className="text-[#5f6368] font-normal"> - <Highlight value={email.preview} query={searchQuery} /></span>
+            <Highlight value={email.subject} query={searchQuery} />
+          </p>
+          <p className="gmail-preview truncate font-['Roboto',Arial,sans-serif] leading-[18px] tracking-normal">
+            <Highlight value={email.preview} query={searchQuery} />
             {hasAttachments ? (
               <span className="ml-1 inline-flex align-middle text-[#5f6368]">
-                <FileText size={14} strokeWidth={1.8} />
+                <FileText size={13} strokeWidth={1.8} />
               </span>
             ) : null}
           </p>
