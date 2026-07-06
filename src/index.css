@@ -406,12 +406,12 @@ a {
 .gmail-mail-item:hover { background: var(--gmail-hover); }
 .gmail-mail-item:active { background: var(--gmail-active); }
 
-.gmail-sender { font-size: 15px; }
+.gmail-sender { font-size: 18px; }
 .gmail-subject { font-size: 14px; }
 .gmail-preview { font-size: 14px; color: var(--gmail-text-secondary); }
 .gmail-time { font-size: 12px; color: var(--gmail-text-secondary); }
 
-.gmail-star-btn { height: 32px; width: 32px; display:grid; place-items:center; border-radius:999px; }
+.gmail-star-btn { height: 36px; width: 36px; display:grid; place-items:center; border-radius:999px; }
 
 
 .mail-avatar{
@@ -482,9 +482,9 @@ a {
 .gmail-mail-item:hover { background: var(--gmail-hover); }
 .gmail-mail-item:active { background: var(--gmail-active); }
 
-.gmail-sender { font-size: 14px; }
+.gmail-sender { font-size: 18px; }
 .gmail-subject { font-size: 14px; }
-.gmail-preview { font-size: 13px; color: var(--gmail-text-secondary); }
+.gmail-preview { font-size: 14px; color: var(--gmail-text-secondary); }
 .gmail-time { font-size: 12px; color: var(--gmail-text-secondary); width: 48px; text-align: right; }
 
 .gmail-star-btn { height: 36px; width: 36px; display:grid; place-items:center; border-radius:999px; }
