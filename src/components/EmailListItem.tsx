@@ -88,7 +88,7 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0">
             <p
-              className={`truncate text-[14px] leading-[1.3] tracking-normal text-[#202124] ${
+              className={`truncate font-['Roboto',Arial,sans-serif] text-[16px] leading-[1.3] tracking-normal text-[#202124] ${
                 email.read ? 'font-medium' : 'font-semibold'
               }`}
             >
@@ -146,11 +146,11 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
         </div>
 
         <div>
-          <p className={`truncate text-[14px] leading-[1.3] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
+          <p className={`truncate font-['Roboto',Arial,sans-serif] text-[15px] leading-[1.3] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
             {isDraft ? <span className="font-medium text-[#d93025]">Draft </span> : null}
             <Highlight value={email.subject} query={searchQuery} />
           </p>
-          <p className="line-clamp-1 mt-1 overflow-hidden text-[13px] leading-[1.2] tracking-normal text-[#5f6368] gmail-preview">
+          <p className="line-clamp-1 mt-1 overflow-hidden font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.2] tracking-normal text-[#5f6368] gmail-preview">
             <Highlight value={email.preview} query={searchQuery} />
           </p>
           {hasAttachments ? (
