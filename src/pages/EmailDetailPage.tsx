@@ -11,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 
 import { Avatar } from '../components/Avatar'
+import { EmailDetailBottomNav } from '../components/EmailDetailBottomNav'
 import { IconButton } from '../components/IconButton'
 import { MessageDetails } from '../components/MessageDetails'
 import { gmailService } from '../services/gmailService'
@@ -57,6 +58,15 @@ function formatSize(size: number) {
   return `${(size / 1024 / 1024).toFixed(1)} MB`
 }
 
+const SENDER_MENU_ITEMS: Array<[string, string]> = [
+  ['Reply all', 'reply_all'],
+  ['Forward', 'forward'],
+  ['Add star', 'star'],
+  ['Print', 'print'],
+  ['Mark unread from here', 'mark_email_unread'],
+  ['Block user', 'block'],
+]
+
 function DetailSkeleton() {
   return (
     <div className="px-4 py-4">
@@ -87,10 +97,12 @@ export function EmailDetailPage() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState('')
   const [menuOpen, setMenuOpen] = useState(false)
+  const [senderMenuOpen, setSenderMenuOpen] = useState(false)
   const [starred, setStarred] = useState(false)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const [attachmentData, setAttachmentData] = useState<Record<string, string>>({})
   const menuRef = useRef<HTMLDivElement>(null)
+  const senderMenuRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     let active = true
@@ -162,19 +174,24 @@ export function EmailDetailPage() {
   }, [id])
 
   useEffect(() => {
-    if (!menuOpen) {
+    if (!menuOpen && !senderMenuOpen) {
       return undefined
     }
 
     function handlePointerDown(event: PointerEvent) {
-      if (!menuRef.current?.contains(event.target as Node)) {
+      if (menuOpen && !menuRef.current?.contains(event.target as Node)) {
         setMenuOpen(false)
+      }
+
+      if (senderMenuOpen && !senderMenuRef.current?.contains(event.target as Node)) {
+        setSenderMenuOpen(false)
       }
     }
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === 'Escape') {
         setMenuOpen(false)
+        setSenderMenuOpen(false)
       }
     }
 
@@ -185,7 +202,7 @@ export function EmailDetailPage() {
       document.removeEventListener('pointerdown', handlePointerDown)
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [menuOpen])
+  }, [menuOpen, senderMenuOpen])
 
   const html = useMemo(() => {
     let nextHtml = email?.bodyHtml || ''
@@ -209,7 +226,10 @@ export function EmailDetailPage() {
   )
 
   return (
-    <main className="gmail-scroll min-h-svh w-full bg-white pb-4 dark:bg-[#202124]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
+    <main
+      className="gmail-scroll min-h-svh w-full bg-white dark:bg-[#202124]"
+      style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + var(--email-detail-nav-height) + 16px)' }}
+    >
       <header className="sticky top-0 z-20 flex h-14 items-center border-b border-[var(--gmail-divider)] bg-white px-2 pt-[env(safe-area-inset-top)] dark:border-[#303134] dark:bg-[#202124]">
         <IconButton label="Back" onClick={() => navigate(-1)} className="size-10 text-[#5f6368]">
           <SymbolIcon name="arrow_back" className="text-xl" />
@@ -322,9 +342,7 @@ export function EmailDetailPage() {
                     aria-label={detailsOpen ? 'Hide sender and recipient details' : 'Show sender and recipient details'}
                     className="mt-0.5 flex max-w-full items-center gap-1 rounded text-left transition hover:text-[#202124] dark:hover:text-[#e3e3e3]"
                   >
-                    <span className="truncate text-[13px] font-normal leading-[18px] text-[#5f6368] dark:text-[#c4c7c5]">
-                      to me • {email.senderEmail}
-                    </span>
+                    <span className="truncate text-[13px] font-normal leading-[18px] text-[#5f6368] dark:text-[#c4c7c5]">to me</span>
                     <ChevronDown
                       size={15}
                       strokeWidth={2}
@@ -333,16 +351,48 @@ export function EmailDetailPage() {
                   </button>
                 </div>
 
-                <div className="flex shrink-0 items-center gap-3 pt-0.5">
-                  <time className="text-[13px] font-normal leading-[18px] text-[#5f6368] dark:text-[#c4c7c5]">{email.timestamp}</time>
+                <div className="flex shrink-0 items-center gap-1 pt-0.5">
+                  <time className="mr-1 text-[13px] font-normal leading-[18px] text-[#5f6368] dark:text-[#c4c7c5]">{email.timestamp}</time>
                   <Link
                     to="/compose"
                     state={{ mode: 'reply', ...replyState }}
                     aria-label="Reply"
-                    className="grid size-6 place-items-center rounded-full text-[#5f6368] transition duration-150 hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
+                    className="grid size-8 place-items-center rounded-full text-[#5f6368] transition duration-150 hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
                   >
                     <SymbolIcon name="reply" className="text-lg" />
                   </Link>
+                  <div className="relative" ref={senderMenuRef}>
+                    <IconButton
+                      label="More options for this message"
+                      onClick={() => setSenderMenuOpen((value) => !value)}
+                      className="size-8 text-[#5f6368]"
+                    >
+                      <SymbolIcon name="more_vert" className="text-lg" />
+                    </IconButton>
+                    <div
+                      role="menu"
+                      className={`absolute right-0 top-9 z-30 w-56 origin-top-right overflow-hidden rounded-[20px] bg-white py-2 text-sm font-medium text-[#202124] shadow-[0_8px_28px_rgba(60,64,67,0.24)] transition duration-180 dark:bg-[#202124] dark:text-[#e3e3e3] ${
+                        senderMenuOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-95 opacity-0'
+                      }`}
+                    >
+                      {SENDER_MENU_ITEMS.map(([label, icon]) => (
+                        <button
+                          key={label}
+                          type="button"
+                          onClick={() => {
+                            if (label === 'Add star') {
+                              setStarred((value) => !value)
+                            }
+                            setSenderMenuOpen(false)
+                          }}
+                          className="flex h-11 w-full items-center gap-4 px-5 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed] dark:hover:bg-white/[0.08]"
+                        >
+                          <SymbolIcon name={icon} className="text-[20px] text-[#5f6368]" />
+                          <span>{label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -399,6 +449,8 @@ export function EmailDetailPage() {
           </div>
         </article>
       ) : null}
+
+      <EmailDetailBottomNav />
     </main>
   )
 }
