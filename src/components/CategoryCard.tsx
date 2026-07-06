@@ -52,7 +52,7 @@ export function CategoryCard({ category, emails }: CategoryCardProps) {
 
       <div className="min-w-0 flex-1 pt-0.5">
         <div className="flex items-center gap-2">
-          <p className="truncate font-['Roboto',Arial,sans-serif] text-[16px] font-medium leading-[1.3] text-[#202124]">{meta.label}</p>
+          <p className="truncate font-['Roboto',Arial,sans-serif] text-[14px] font-medium leading-[1.3] text-[#202124]">{meta.label}</p>
           {count > 0 ? (
             <span
               className="shrink-0 rounded-full px-2 py-0.5 text-[11px] font-medium leading-4 text-white"
@@ -62,7 +62,7 @@ export function CategoryCard({ category, emails }: CategoryCardProps) {
             </span>
           ) : null}
         </div>
-        <p className="line-clamp-1 mt-1 overflow-hidden font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.2] tracking-normal text-[#5f6368]">
+        <p className="line-clamp-1 mt-1 overflow-hidden font-['Roboto',Arial,sans-serif] text-[13px] leading-[1.2] tracking-normal text-[#5f6368]">
           {senderPreview}
         </p>
       </div>
