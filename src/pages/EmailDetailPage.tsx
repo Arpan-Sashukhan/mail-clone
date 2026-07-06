@@ -319,6 +319,7 @@ export function EmailDetailPage() {
             >
               <SymbolIcon name="star" className={`text-2xl ${starred ? 'material-symbols-filled text-[#fbbc04]' : ''}`} />
           </button>
+          </div>
           
 
           {visibleLabels.length ? (
