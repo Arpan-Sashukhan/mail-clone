@@ -64,7 +64,31 @@
   --gmail-radius-medium: 16px;
   --gmail-radius-large: 24px;
   --gmail-radius-xlarge: 28px;
+  /* --- new layout var (added to :root) --- */
+--email-detail-nav-height: 68px;
 }
+
+/* --- new rule block --- */
+/* Email detail screen - persistent Mail / Meet navigation */
+.gmail-email-detail-nav {
+  height: var(--email-detail-nav-height);
+  border-top: 1px solid var(--gmail-divider);
+  background: #fff;
+}
+.gmail-email-detail-nav .nav-item { font-size: 12px; }
+.gmail-email-detail-nav .nav-icon { width: 24px; height: 24px; }
+.gmail-email-detail-nav .nav-item.selected { color: var(--gmail-primary); }
+.gmail-unread-badge {
+  background: #C5221F;
+  color: #fff;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  font-size: 10px;
+  line-height: 16px;
+  font-weight: 500;
+}
+
 
 :root.dark {
   color-scheme: dark;
