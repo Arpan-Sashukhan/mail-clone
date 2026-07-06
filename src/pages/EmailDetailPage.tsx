@@ -318,7 +318,8 @@ export function EmailDetailPage() {
               className="star-button grid size-8 shrink-0 place-items-center rounded-full text-[#bdc1c6] transition duration-150 hover:bg-[#f1f3f4] hover:text-[#fbbc04] active:scale-110 dark:hover:bg-white/[0.08]"
             >
               <SymbolIcon name="star" className={`text-2xl ${starred ? 'material-symbols-filled text-[#fbbc04]' : ''}`} />
-          </div>
+          </button>
+          
 
           {visibleLabels.length ? (
             <div className="mx-4 mt-3 flex flex-wrap gap-1.5">
