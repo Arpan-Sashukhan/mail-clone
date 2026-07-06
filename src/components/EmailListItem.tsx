@@ -60,7 +60,7 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
         <div className="min-w-0">
           <p
             className={`gmail-sender truncate font-[Google_Sans, Roboto, sans-serif] leading-[21px] tracking-normal text-[#202124] ${
-              email.read ? 'font-normal' : 'font-medium'
+              email.read ? 'font-normal' : 'font-semibold'
             }`}
           >
             <Highlight value={email.sender} query={searchQuery} />
