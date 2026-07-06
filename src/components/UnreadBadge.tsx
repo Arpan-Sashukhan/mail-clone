@@ -1,14 +1,16 @@
 interface UnreadBadgeProps {
-  count: number
+  count?: number
   max?: number
   className?: string
 }
 
 /**
  * Small rounded-pill badge used to show an unread count, matching the
- * Gmail Android bottom navigation badge (e.g. "99+").
+ * Gmail Android bottom navigation badge (e.g. "99+"). Defaults to 99 so
+ * every screen shows the same badge unless a page explicitly overrides it
+ * with a real count.
  */
-export function UnreadBadge({ count, max = 99, className = '' }: UnreadBadgeProps) {
+export function UnreadBadge({ count = 99, max = 99, className = '' }: UnreadBadgeProps) {
   if (count <= 0) {
     return null
   }
