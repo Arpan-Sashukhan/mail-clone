@@ -415,7 +415,7 @@ a {
 
 /* Gmail specific classes */
 .gmail-search {
-  margin: 8px 12px;
+  margin: 4px 8px 12px;
 }
 
 .gmail-search .gmail-search-inner {
@@ -460,7 +460,7 @@ a {
 .gmail-sender { font-size: 14px; }
 .gmail-subject { font-size: 14px; }
 .gmail-preview { font-size: 13px; color: var(--gmail-text-secondary); }
-.gmail-time { font-size: 11px; color: var(--gmail-text-secondary); width: 48px; text-align: right; }
+.gmail-time { font-size: 12px; color: var(--gmail-text-secondary); width: 48px; text-align: right; }
 
 .gmail-star-btn { height: 36px; width: 36px; display:grid; place-items:center; border-radius:999px; }
 
