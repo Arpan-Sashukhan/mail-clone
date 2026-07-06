@@ -22,7 +22,7 @@ function BottomNavigationItem({ icon, label, active = false, badgeCount, onClick
         </span>
         {typeof badgeCount === 'number' ? <UnreadBadge count={badgeCount} /> : null}
       </span>
-      <span className="mt-1">{label}</span>
+      <span className="sr-only">{label}</span>
     </>
   )
 
