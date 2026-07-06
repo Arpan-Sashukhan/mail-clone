@@ -2,22 +2,28 @@ interface AvatarProps {
   name: string
   src?: string
   className?: string
+  color?: string
 }
 
-const colors = [
-  'bg-[#a8d672]',
-  'bg-[#8ab4f8]',
-  'bg-[#f28b82]',
-  'bg-[#fdd663]',
-  'bg-[#c58af9]',
-]
+const colors = ['#7baaf7', '#f6a95d', '#8d6e63', '#57bb8a', '#e06666', '#ba68c8']
 
-export function Avatar({ name, src, className = '' }: AvatarProps) {
+function hashSeed(value: string) {
+  let hash = 0
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) >>> 0
+  }
+  return hash
+}
+
+export function Avatar({ name, src, className = '', color }: AvatarProps) {
   const initial = name.trim().charAt(0).toUpperCase()
-  const color = colors[name.length % colors.length]
+  const background = color ?? colors[hashSeed(name) % colors.length]
 
   return (
-    <div className={`grid shrink-0 place-items-center overflow-hidden rounded-full text-[20px] font-medium leading-none text-white ${color} ${className}`} style={{width: "var(--mail-avatar)", height: "var(--mail-avatar)",}}>
+    <div
+      className={`grid shrink-0 place-items-center overflow-hidden rounded-full text-[20px] font-medium leading-none text-white ${className}`}
+      style={{ width: 'var(--mail-avatar)', height: 'var(--mail-avatar)', backgroundColor: background }}
+    >
       {src ? (
         <img src={src} alt="" className="size-full object-cover" referrerPolicy="no-referrer" />
       ) : (
