@@ -11,7 +11,7 @@ const CATEGORY_META = {
   social: {
     label: 'Social',
     icon: Users,
-    iconBg: '#E8F0FE',
+    iconBg: '#D2E3FC',
     iconColor: '#1A73E8',
     badgeBg: '#12B5CB',
     to: '/social',
@@ -19,8 +19,8 @@ const CATEGORY_META = {
   promotions: {
     label: 'Promotions',
     icon: Tag,
-    iconBg: '#E6F4EA',
-    iconColor: '#34A853',
+    iconBg: '#CEEAD6',
+    iconColor: '#188038',
     badgeBg: '#34A853',
     to: '/promotions',
   },
