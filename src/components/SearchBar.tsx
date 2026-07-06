@@ -18,12 +18,13 @@ type AccountRow = {
   name: string
   email: string
   unread: string
+  color: string
 }
 
 const secondaryAccounts: AccountRow[] = [
-  { name: 'Arpan Sadhukhan', email: 'arpan_pg_23@cse.nits.ac.in', unread: '99+' },
-  { name: 'Arpan Sadhukhan', email: 'mailtosadhukhan@gmail.com', unread: '99+' },
-  { name: 'ARPAN SADHUKHAN', email: 'arpan40432@paruluniv.ac.in', unread: '99+' },
+  { name: 'Arpan Sadhukhan', email: 'arpan_pg_23@cse.nits.ac.in', unread: '99+', color: '#7baaf7' },
+  { name: 'Arpan Sadhukhan', email: 'mailtosadhukhan@gmail.com', unread: '99+', color: '#ee6a5f' },
+  { name: 'ARPAN SADHUKHAN', email: 'arpan40432@paruluniv.ac.in', unread: '99+', color: '#8d6e63' },
 ]
 
 function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
@@ -47,8 +48,8 @@ function GoogleWordmark() {
   )
 }
 
-function AccountAvatar({ name, src, size = 'size-12', textSize = 'text-base' }: { name: string; src?: string; size?: string; textSize?: string }) {
-  return <Avatar name={name} src={src} className={`${size} ${textSize}`} />
+function AccountAvatar({ name, src, size = 'size-12', textSize = 'text-base', color }: { name: string; src?: string; size?: string; textSize?: string; color?: string }) {
+  return <Avatar name={name} src={src} color={color} className={`${size} ${textSize}`} />
 }
 
 export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', onSearchChange, searching = false }: SearchBarProps) {
@@ -110,7 +111,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
             onClick={() => setAccountOpen((value) => !value)}
             className="grid size-12 shrink-0 place-items-center rounded-full transition duration-150 hover:bg-black/5 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#1a73e8] active:scale-95 active:bg-black/10 dark:hover:bg-white/[0.08]"
           >
-            <Avatar name={profile.name} src={profile.picture} className="gmail-avatar size-8 text-xs shadow-[0_0_0_2px_white]" />
+            <Avatar name={profile.name} src={profile.picture} color="#8d6e63" className="gmail-avatar size-8 text-xs shadow-[0_0_0_2px_white]" />
           </button>
 
           {createPortal(
@@ -148,9 +149,9 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
               </div>
 
               <div className="px-6">
-                <div className="flex items-center">
+                <div className="flex items-start">
                   <div className="relative shrink-0">
-                    <AccountAvatar name={profile.name} src={profile.picture} size="size-14" textSize="text-lg" />
+                    <AccountAvatar name={profile.name} src={profile.picture} size="size-14" textSize="text-lg" color="#8d6e63" />
                     <span className="absolute -bottom-0.5 -left-0.5 grid size-5 place-items-center rounded-full bg-white text-[#5f6368] shadow-[0_0_0_1px_#dadce0]">
                       <SymbolIcon name="photo_camera" className="text-[20px]" />
                     </span>
@@ -159,7 +160,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
                     <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-semibold leading-6 text-[#202124]">{profile.name}</p>
                     <p className="mt-0.5 truncate text-[15px] font-normal leading-5 text-[#5f6368]">{profile.email}</p>
                   </div>
-                  <span className="ml-4 shrink-0 text-base font-medium leading-6 text-[#5f6368]">99+</span>
+                  <span className="ml-4 mt-0.5 shrink-0 text-base font-medium leading-6 text-[#5f6368]">99+</span>
                 </div>
 
                 <div className="flex justify-center">
@@ -176,7 +177,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
 
               <div className="flex h-16 items-center px-6 text-[#3c4043]">
                 <SymbolIcon name="cloud" className="text-[20px] text-[#5f6368]" />
-                <span className="ml-4 truncate text-base font-normal leading-6">Storage used: 68% of 15 GB</span>
+                <span className="ml-4 truncate text-base font-normal leading-6">Storage used: 79% of 15 GB</span>
               </div>
 
               <div className="h-px bg-[#e8eaed]" />
@@ -184,9 +185,9 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
               <div>
                 {secondaryAccounts.map((account) => (
                   <div key={account.email} className="flex h-[72px] items-center px-6 transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
-                    <AccountAvatar name={account.name} />
+                    <AccountAvatar name={account.name} color={account.color} />
                     <div className="ml-4 min-w-0 flex-1">
-                      <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-[17px] font-medium leading-6 text-[#202124]">{account.name}</p>
+                      <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-[17px] font-medium leading-6 text-[#1a73e8]">{account.name}</p>
                       <p className="truncate text-[15px] font-normal leading-5 text-[#5f6368]">{account.email}</p>
                     </div>
                     <span className="ml-4 shrink-0 text-base font-normal leading-6 text-[#5f6368]">{account.unread}</span>
