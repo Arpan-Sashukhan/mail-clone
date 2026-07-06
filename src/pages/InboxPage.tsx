@@ -261,7 +261,7 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
         <ComposeButton compact={fabCompact} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-inherit pb-[env(safe-area-inset-bottom)]">
-        <EmailDetailBottomNav unreadCount={emails.filter((item) => !item.read).length} />
+        <EmailDetailBottomNav />
       </div>
     </main>
   )
