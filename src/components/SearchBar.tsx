@@ -21,8 +21,9 @@ type AccountRow = {
 }
 
 const secondaryAccounts: AccountRow[] = [
-  { name: 'Account 2', email: 'account2@gmail.com', unread: '99+' },
-
+  { name: 'Arpan Sadhukhan', email: 'arpan_pg_23@cse.nits.ac.in', unread: '99+' },
+  { name: 'Arpan Sadhukhan', email: 'mailtosadhukhan@gmail.com', unread: '99+' },
+  { name: 'ARPAN SADHUKHAN', email: 'arpan40432@paruluniv.ac.in', unread: '99+' },
 ]
 
 function SymbolIcon({ name, className = '' }: { name: string; className?: string }) {
@@ -83,7 +84,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
   }, [accountOpen])
 
   return (
-    <header className="sticky top-0 z-20 bg-white pb-2 pt-[max(8px,env(safe-area-inset-top))] gmail-search">
+    <header className="sticky top-0 z-20 bg-white pb-2 pt-[env(safe-area-inset-top)] gmail-search">
       <div className="relative gmail-search-inner">
         <IconButton label="Open navigation" onClick={onOpenDrawer} className="size-12">
           <Menu size={20} />
