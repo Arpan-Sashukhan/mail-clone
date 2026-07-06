@@ -241,6 +241,9 @@ export function EmailDetailPage() {
           <IconButton label="Archive" className="size-10 text-[#5f6368]">
             <SymbolIcon name="archive" className="text-xl" />
           </IconButton>
+          <IconButton label="Delete" onClick={() => navigate(-1)} className="size-10 text-[#5f6368]">
+            <SymbolIcon name="delete" className="text-xl" />
+          </IconButton>
           <IconButton label="Mark unread" className="size-10 text-[#5f6368]">
             <SymbolIcon name="mail" className="text-xl" />
           </IconButton>
