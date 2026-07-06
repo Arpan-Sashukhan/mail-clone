@@ -59,16 +59,16 @@ function formatSize(size: number) {
 
 function DetailSkeleton() {
   return (
-    <div className="px-5 py-4">
-      <div className="mail-shimmer h-8 w-10/12 rounded-full bg-[#e8eef7] dark:bg-[#303134]" />
-      <div className="mt-6 flex gap-3">
+    <div className="px-4 py-4">
+      <div className="mail-shimmer h-6 w-10/12 rounded-full bg-[#e8eef7] dark:bg-[#303134]" />
+      <div className="mt-5 flex gap-3">
         <div className="mail-shimmer size-10 rounded-full bg-[#e8eef7] dark:bg-[#303134]" />
         <div className="flex-1 space-y-3">
           <div className="mail-shimmer h-4 w-5/12 rounded-full bg-[#e8eef7] dark:bg-[#303134]" />
           <div className="mail-shimmer h-3 w-8/12 rounded-full bg-[#e8eef7] dark:bg-[#303134]" />
         </div>
       </div>
-      <div className="mt-8 space-y-3">
+      <div className="mt-6 space-y-3">
         {Array.from({ length: 7 }).map((_, index) => (
           <div key={index} className="mail-shimmer h-4 rounded-full bg-[#e8eef7] dark:bg-[#303134]" />
         ))}
@@ -209,24 +209,24 @@ export function EmailDetailPage() {
   )
 
   return (
-    <main className="gmail-scroll min-h-svh w-full bg-white pb-10 dark:bg-[#202124]">
-      <header className="sticky top-0 z-20 flex h-16 items-center border-b border-[#ececec] bg-white px-4 pt-[env(safe-area-inset-top)] dark:border-[#303134] dark:bg-[#202124]">
-        <IconButton label="Back" onClick={() => navigate(-1)} className="size-6 text-[#5f6368]">
-          <SymbolIcon name="arrow_back" className="text-2xl" />
+    <main className="gmail-scroll min-h-svh w-full bg-white pb-4 dark:bg-[#202124]" style={{ paddingBottom: 'calc(env(safe-area-inset-bottom) + 16px)' }}>
+      <header className="sticky top-0 z-20 flex h-14 items-center border-b border-[var(--gmail-divider)] bg-white px-2 pt-[env(safe-area-inset-top)] dark:border-[#303134] dark:bg-[#202124]">
+        <IconButton label="Back" onClick={() => navigate(-1)} className="size-10 text-[#5f6368]">
+          <SymbolIcon name="arrow_back" className="text-xl" />
         </IconButton>
 
         <div className="flex-1" />
 
-        <div className="flex items-center gap-5">
-          <IconButton label="Archive" className="size-6 text-[#5f6368]">
-            <SymbolIcon name="archive" className="text-2xl" />
+        <div className="flex items-center gap-1">
+          <IconButton label="Archive" className="size-10 text-[#5f6368]">
+            <SymbolIcon name="archive" className="text-xl" />
           </IconButton>
-          <IconButton label="Mark unread" className="size-6 text-[#5f6368]">
-            <SymbolIcon name="mail" className="text-2xl" />
+          <IconButton label="Mark unread" className="size-10 text-[#5f6368]">
+            <SymbolIcon name="mail" className="text-xl" />
           </IconButton>
           <div className="relative" ref={menuRef}>
-            <IconButton label="More options" onClick={() => setMenuOpen((value) => !value)} className="size-6 text-[#5f6368]">
-              <SymbolIcon name="more_vert" className="text-2xl" />
+            <IconButton label="More options" onClick={() => setMenuOpen((value) => !value)} className="size-10 text-[#5f6368]">
+              <SymbolIcon name="more_vert" className="text-xl" />
             </IconButton>
             <div
               role="menu"
@@ -284,37 +284,37 @@ export function EmailDetailPage() {
 
       {!loading && email ? (
         <article className="email-detail-enter">
-          <div className="mx-6 mt-5 flex items-center gap-4">
-            <h1 className="min-w-0 flex-1 font-['Google_Sans',Roboto,sans-serif] text-[34px] font-normal leading-[40px] tracking-normal text-[#202124] dark:text-[#e3e3e3]">
+          <div className="mx-4 mt-4 flex items-center gap-3">
+            <h1 className="min-w-0 flex-1 font-['Google_Sans',Roboto,sans-serif] text-[22px] font-normal leading-[28px] tracking-normal text-[#202124] dark:text-[#e3e3e3]">
               {email.subject}
             </h1>
             <button
               type="button"
               aria-label={starred ? 'Remove star' : 'Add star'}
               onClick={() => setStarred((value) => !value)}
-              className="star-button grid size-6 shrink-0 place-items-center rounded-full text-[#bdc1c6] transition duration-150 hover:bg-[#f1f3f4] hover:text-[#fbbc04] active:scale-110 dark:hover:bg-white/[0.08]"
+              className="star-button grid size-8 shrink-0 place-items-center rounded-full text-[#bdc1c6] transition duration-150 hover:bg-[#f1f3f4] hover:text-[#fbbc04] active:scale-110 dark:hover:bg-white/[0.08]"
             >
-              <SymbolIcon name={starred ? 'star' : 'star'} className={`text-2xl ${starred ? 'material-symbols-filled text-[#fbbc04]' : ''}`} />
+              <SymbolIcon name={starred ? 'star' : 'star'} className={`text-xl ${starred ? 'material-symbols-filled text-[#fbbc04]' : ''}`} />
             </button>
           </div>
 
           {visibleLabels.length ? (
-            <div className="mx-6 mt-4 flex flex-wrap gap-2">
+            <div className="mx-4 mt-3 flex flex-wrap gap-1.5">
               {visibleLabels.map((label) => (
-                <span key={label} className={`flex h-8 items-center rounded-xl px-3 py-1.5 text-sm font-medium leading-5 ${labelClass()}`}>
+                <span key={label} className={`flex h-6 items-center rounded-full px-2.5 text-xs font-medium leading-4 ${labelClass()}`}>
                   {label}
                 </span>
               ))}
             </div>
           ) : null}
 
-          <section className="mx-6 mt-6 flex items-start gap-4 pb-4">
-            <Avatar name={email.sender} src={email.avatar} className="size-12 text-base" />
+          <section className="mx-4 mt-4 flex items-start gap-3 pb-3">
+            <Avatar name={email.sender} src={email.avatar} className="size-10 text-sm" />
 
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 text-left">
-                  <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-semibold leading-6 text-[#202124] dark:text-[#e3e3e3]">{email.sender}</p>
+                  <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-base font-medium leading-5 text-[#202124] dark:text-[#e3e3e3]">{email.sender}</p>
                   <button
                     type="button"
                     onClick={() => setDetailsOpen((value) => !value)}
@@ -322,26 +322,26 @@ export function EmailDetailPage() {
                     aria-label={detailsOpen ? 'Hide sender and recipient details' : 'Show sender and recipient details'}
                     className="mt-0.5 flex max-w-full items-center gap-1 rounded text-left transition hover:text-[#202124] dark:hover:text-[#e3e3e3]"
                   >
-                    <span className="truncate text-[15px] font-normal leading-5 text-[#5f6368] dark:text-[#c4c7c5]">
+                    <span className="truncate text-[13px] font-normal leading-[18px] text-[#5f6368] dark:text-[#c4c7c5]">
                       to me • {email.senderEmail}
                     </span>
                     <ChevronDown
-                      size={16}
+                      size={15}
                       strokeWidth={2}
                       className={`shrink-0 text-[#5f6368] transition-transform duration-150 dark:text-[#c4c7c5] ${detailsOpen ? 'rotate-180' : ''}`}
                     />
                   </button>
                 </div>
 
-                <div className="flex shrink-0 items-center gap-4 pt-0.5">
-                  <time className="text-[15px] font-normal leading-[22px] text-[#5f6368] dark:text-[#c4c7c5]">{email.timestamp}</time>
+                <div className="flex shrink-0 items-center gap-3 pt-0.5">
+                  <time className="text-[13px] font-normal leading-[18px] text-[#5f6368] dark:text-[#c4c7c5]">{email.timestamp}</time>
                   <Link
                     to="/compose"
                     state={{ mode: 'reply', ...replyState }}
                     aria-label="Reply"
-                    className="grid size-[22px] place-items-center rounded-full text-[#5f6368] transition duration-150 hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
+                    className="grid size-6 place-items-center rounded-full text-[#5f6368] transition duration-150 hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:text-[#c4c7c5] dark:hover:bg-white/[0.08]"
                   >
-                    <SymbolIcon name="reply" className="text-[22px]" />
+                    <SymbolIcon name="reply" className="text-lg" />
                   </Link>
                 </div>
               </div>
@@ -351,12 +351,12 @@ export function EmailDetailPage() {
           {detailsOpen ? <MessageDetails email={email} /> : null}
 
           <div
-            className="gmail-message-body mx-6 mt-8 overflow-x-auto font-['Roboto',Arial,sans-serif] text-base font-normal leading-7 text-[#202124] dark:text-[#e3e3e3]"
+            className="gmail-message-body mx-4 mt-4 overflow-x-auto font-['Roboto',Arial,sans-serif] text-base font-normal leading-6 text-[#202124] dark:text-[#e3e3e3]"
             dangerouslySetInnerHTML={{ __html: html }}
           />
 
           {email.attachments?.filter((attachment) => !attachment.inline || attachment.filename !== 'Inline image').length ? (
-            <section className="mx-6 mt-8 grid gap-3" aria-label="Attachments">
+            <section className="mx-4 mt-6 grid gap-3" aria-label="Attachments">
               {email.attachments
                 .filter((attachment) => !attachment.inline || attachment.filename !== 'Inline image')
                 .map((attachment) => (
@@ -383,17 +383,17 @@ export function EmailDetailPage() {
             </section>
           ) : null}
 
-          <div className="mx-6 mt-10 grid grid-cols-3 gap-2">
-            <Link to="/compose" state={{ mode: 'reply', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
-              <SymbolIcon name="reply" className="text-[18px]" />
+          <div className="mx-4 mt-6 grid grid-cols-3 gap-2">
+            <Link to="/compose" state={{ mode: 'reply', ...replyState }} className="flex h-9 items-center justify-center gap-1.5 rounded-full border border-[#dadce0] text-[13px] font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
+              <SymbolIcon name="reply" className="text-base" />
               Reply
             </Link>
-            <Link to="/compose" state={{ mode: 'replyAll', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
-              <SymbolIcon name="reply_all" className="text-[18px]" />
+            <Link to="/compose" state={{ mode: 'replyAll', ...replyState }} className="flex h-9 items-center justify-center gap-1.5 rounded-full border border-[#dadce0] text-[13px] font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
+              <SymbolIcon name="reply_all" className="text-base" />
               Reply all
             </Link>
-            <Link to="/compose" state={{ mode: 'forward', ...replyState }} className="flex h-11 items-center justify-center gap-2 rounded-full border border-[#dadce0] text-sm font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
-              <SymbolIcon name="forward" className="text-[18px]" />
+            <Link to="/compose" state={{ mode: 'forward', ...replyState }} className="flex h-9 items-center justify-center gap-1.5 rounded-full border border-[#dadce0] text-[13px] font-medium text-[#3c4043] transition hover:bg-[#f1f3f4] active:bg-[#e8f0fe] dark:border-[#5f6368] dark:text-[#e3e3e3] dark:hover:bg-white/[0.08]">
+              <SymbolIcon name="forward" className="text-base" />
               Forward
             </Link>
           </div>
