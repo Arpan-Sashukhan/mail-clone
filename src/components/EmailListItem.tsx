@@ -52,60 +52,64 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
       onClick={() => {
         localStorage.setItem('selected_email', JSON.stringify(email))
       }}
-      className="gmail-mail-item relative grid grid-cols-[var(--mail-avatar)_minmax(0,1fr)_var(--time-column-compact)] gap-3 overflow-hidden bg-white text-left transition duration-150 hover:bg-[#F8FAFD] active:bg-[#EDF2FA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#1a73e8]"
+      className="gmail-mail-item relative grid grid-cols-[var(--mail-avatar)_minmax(0,1fr)] items-center gap-4 overflow-hidden bg-white text-left transition duration-150 hover:bg-[#F8FAFD] active:bg-[#EDF2FA] focus-visible:outline focus-visible:outline-2 focus-visible:outline-inset focus-visible:outline-[#1a73e8]"
     >
       <Avatar name={email.sender} className="mail-avatar text-[16px] font-medium" />
 
-      <div className="flex min-w-0 flex-col gap-1">
-        <div className="min-w-0">
+      <div className="flex min-w-0 flex-col justify-center gap-[2px]">
+        {/* Line 1: sender ... timestamp */}
+        <div className="flex min-w-0 items-baseline gap-2">
           <p
-            className={`truncate font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.3] tracking-normal text-[#202124] ${
-              email.read ? 'font-medium' : 'font-semibold'
+            className={`min-w-0 flex-1 truncate font-['Roboto',Arial,sans-serif] text-[15px] leading-[1.3] tracking-normal text-[#202124] ${
+              email.read ? 'font-normal' : 'font-semibold'
             }`}
           >
             <Highlight value={email.sender} query={searchQuery} />
           </p>
+          <span
+            className={`gmail-time shrink-0 truncate ${email.read ? 'font-normal' : 'font-semibold'}`}
+          >
+            {email.timestamp}
+          </span>
         </div>
 
-        <div>
-          <p className={`truncate font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.3] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
+        {/* Line 2: subject - preview ... star */}
+        <div className="flex min-w-0 items-center gap-2">
+          <p className="min-w-0 flex-1 truncate font-['Roboto',Arial,sans-serif] text-[14px] leading-[1.3] tracking-normal">
             {isDraft ? <span className="font-medium text-[#d93025]">Draft </span> : null}
-            <Highlight value={email.subject} query={searchQuery} />
+            <span className={`text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
+              <Highlight value={email.subject} query={searchQuery} />
+            </span>
+            <span className="text-[#5f6368]"> - <Highlight value={email.preview} query={searchQuery} /></span>
           </p>
-          <p className="line-clamp-1 mt-1 overflow-hidden font-['Roboto',Arial,sans-serif] text-[13px] leading-[1.2] tracking-normal text-[#5f6368] gmail-preview">
-            <Highlight value={email.preview} query={searchQuery} />
-          </p>
-          {hasAttachments ? (
-            <div className="mt-2 flex min-w-0">
-              <span className="attachment-chip inline-flex items-center gap-1.5">
-                <FileText size={15} strokeWidth={1.8} />
-                <span className="truncate">{email.attachments?.[0]?.filename}</span>
-              </span>
-            </div>
-          ) : null}
+
+          <button
+            type="button"
+            aria-label={email.starred ? 'Starred email' : 'Star email'}
+            onClick={(event) => {
+              event.preventDefault()
+              event.stopPropagation()
+              onToggleStar?.(email.id)
+            }}
+            className="gmail-star-btn shrink-0 text-[#bdc1c6] transition duration-150 hover:bg-[#F1F3F4] active:scale-90"
+          >
+            <Star
+              size={20}
+              strokeWidth={1.75}
+              className={email.starred ? 'fill-[#fbc02d] text-[#fbc02d]' : ''}
+              aria-hidden="true"
+            />
+          </button>
         </div>
-      </div>
 
-      <div className="relative flex min-w-0 flex-col items-end justify-between gap-2 pt-px">
-        <span className={`gmail-time truncate ${email.read ? 'font-medium' : 'font-semibold'}`}>{email.timestamp}</span>
-
-        <button
-          type="button"
-          aria-label={email.starred ? 'Starred email' : 'Star email'}
-          onClick={(event) => {
-            event.preventDefault()
-            event.stopPropagation()
-            onToggleStar?.(email.id)
-          }}
-          className="gmail-star-btn text-[#bdc1c6] transition duration-150 hover:bg-[#F1F3F4] active:scale-90"
-        >
-          <Star
-            size={20}
-            strokeWidth={1.75}
-            className={email.starred ? 'fill-[#fbc02d] text-[#fbc02d]' : ''}
-            aria-hidden="true"
-          />
-        </button>
+        {hasAttachments ? (
+          <div className="mt-1 flex min-w-0">
+            <span className="attachment-chip inline-flex items-center gap-1.5">
+              <FileText size={15} strokeWidth={1.8} />
+              <span className="truncate">{email.attachments?.[0]?.filename}</span>
+            </span>
+          </div>
+        ) : null}
       </div>
     </Link>
   )
