@@ -1,5 +1,6 @@
 @import url("https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&family=Roboto:wght@400;500&display=swap");
 @import "tailwindcss";
+@import url("https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;600&family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@20..48,400,0..1,0&family=Roboto:wght@400;500;600;700&display=swap");
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -335,8 +336,7 @@ a {
   flex-direction:column;
   overflow:hidden;
   background: inherit;
-
-    line-height:1.7;
+  line-height:1.7;
 }
 
 .gmail-message-body img {
@@ -394,27 +394,30 @@ a {
   margin: 0 0 4px;
 }
 
+
 .gmail-mail-item{
-
     display:flex;
-
     align-items:flex-start;
-
     gap: var(--mail-gap);
-
     min-height:var(--mail-row-min-height);
-
-    padding-block:10px;
+    padding-block:var(--mail-gap-vertical);
     padding-inline:var(--mail-horizontal-padding);
+}
 
+.gmail-mail-item{
+  display:flex;
+  align-items:flex-start;
+  gap: 12px;
+  min-height: var(--mail-row-min-height);
+  padding-block:8px;
+  padding-inline:16px;
+  background: #ffffff;
 }
 
 .mail-avatar{
 
     width:var(--mail-avatar);
-
     height:var(--mail-avatar);
-
     flex-shrink:0;
 
 }
