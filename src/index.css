@@ -334,11 +334,12 @@ a {
   margin:0;
   display:flex;
   flex-direction:column;
-  overflow:hidden;
+  overflow-y:auto;        /* was: overflow:hidden */
+  overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
   background: inherit;
   line-height:1.7;
 }
-
 .gmail-message-body img {
     max-width:100%;
     height:auto;
