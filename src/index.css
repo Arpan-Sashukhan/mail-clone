@@ -396,14 +396,6 @@ a {
 }
 
 
-.gmail-mail-item{
-    display:flex;
-    align-items:flex-start;
-    gap: var(--mail-gap);
-    min-height:var(--mail-row-min-height);
-    padding-block:var(--mail-gap-vertical);
-    padding-inline:var(--mail-horizontal-padding);
-}
 
 .gmail-mail-item{
   display:flex;
@@ -414,7 +406,6 @@ a {
   padding-inline:16px;
   background: #ffffff;
 }
-
 .mail-avatar{
 
     width:var(--mail-avatar);
