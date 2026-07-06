@@ -130,13 +130,13 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
               {/* Panel */}
               <div
                 ref={panelRef}
-                className={`fixed right-[max(12px,env(safe-area-inset-right))] top-[calc(env(safe-area-inset-top)+64px)] z-[95] max-h-[calc(100vh-env(safe-area-inset-top)-80px)] w-[min(360px,calc(100vw-24px))] origin-top-right overflow-y-auto rounded-[28px] bg-white text-[#202124] shadow-[0_8px_28px_rgba(60,64,67,0.26)] transition duration-180 ease-[cubic-bezier(0.2,0,0,1)] ${
+                className={`fixed right-[max(12px,env(safe-area-inset-right))] top-[calc(env(safe-area-inset-top)+64px)] z-[95] max-h-[calc(100vh-env(safe-area-inset-top)-80px)] w-[min(320px,calc(100vw-32px))] origin-top-right overflow-y-auto rounded-[20px] bg-white text-[#202124] shadow-[0_8px_28px_rgba(60,64,67,0.26)] transition duration-180 ease-[cubic-bezier(0.2,0,0,1)] ${
                   accountOpen ? 'scale-100 opacity-100' : 'pointer-events-none scale-[0.96] opacity-0'
                 }`}
                 role="menu"
                 aria-label="Google account"
               >
-              <div className="relative flex h-[60px] items-center px-6 pt-5 pb-4">
+              <div className="relative flex h-14 items-center px-5 pt-4 pb-3">
                 <button
                   type="button"
                   aria-label="Close account menu"
@@ -148,25 +148,25 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
                 <GoogleWordmark />
               </div>
 
-              <div className="px-6">
+              <div className="px-5">
                 <div className="flex items-start">
                   <div className="relative shrink-0">
-                    <AccountAvatar name={profile.name} src={profile.picture} size="size-14" textSize="text-lg" color="#8d6e63" />
+                    <AccountAvatar name={profile.name} src={profile.picture} size="size-12" textSize="text-base" color="#8d6e63" />
                     <span className="absolute -bottom-0.5 -left-0.5 grid size-5 place-items-center rounded-full bg-white text-[#5f6368] shadow-[0_0_0_1px_#dadce0]">
-                      <SymbolIcon name="photo_camera" className="text-[20px]" />
+                      <SymbolIcon name="photo_camera" className="text-[16px]" />
                     </span>
                   </div>
-                  <div className="ml-4 min-w-0 flex-1">
-                    <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-[17px] font-medium leading-6 text-[#202124]">{account.name}</p>
-                    <p className="mt-0.5 truncate text-[15px] font-normal leading-5 text-[#5f6368]">{profile.email}</p>
+                  <div className="ml-3 min-w-0 flex-1">
+                    <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-base font-semibold leading-5 text-[#202124]">{profile.name}</p>
+                    <p className="mt-0.5 truncate text-sm font-normal leading-5 text-[#5f6368]">{profile.email}</p>
                   </div>
-                  <span className="ml-4 mt-0.5 shrink-0 text-base font-medium leading-6 text-[#5f6368]">99+</span>
+                  <span className="ml-3 mt-0.5 shrink-0 text-sm font-medium leading-5 text-[#5f6368]">99+</span>
                 </div>
 
                 <div className="flex justify-center">
                   <button
                     type="button"
-                    className="mt-5 mb-5 h-11 rounded-full border border-[#dadce0] bg-white px-6 font-['Google_Sans',Roboto,sans-serif] text-base font-medium leading-6 text-[#3c4043] transition hover:bg-[#f8fafd] active:bg-[#f1f3f4]"
+                    className="mt-4 mb-4 h-10 rounded-full border border-[#dadce0] bg-white px-5 font-['Google_Sans',Roboto,sans-serif] text-sm font-medium leading-6 text-[#3c4043] transition hover:bg-[#f8fafd] active:bg-[#f1f3f4]"
                   >
                     Manage your Google Account
                   </button>
@@ -175,35 +175,35 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
 
               <div className="h-px bg-[#e8eaed]" />
 
-              <div className="flex h-16 items-center px-6 text-[#3c4043]">
-                <SymbolIcon name="cloud" className="text-[20px] text-[#5f6368]" />
-                <span className="ml-4 truncate text-base font-normal leading-6">Storage used: 79% of 15 GB</span>
+              <div className="flex h-12 items-center px-5 text-[#3c4043]">
+                <SymbolIcon name="cloud" className="text-[18px] text-[#5f6368]" />
+                <span className="ml-3 truncate text-sm font-normal leading-5">Storage used: 79% of 15 GB</span>
               </div>
 
               <div className="h-px bg-[#e8eaed]" />
 
               <div>
                 {secondaryAccounts.map((account) => (
-                  <div key={account.email} className="flex h-[72px] items-center px-6 transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
-                    <AccountAvatar name={account.name} color={account.color} />
-                    <div className="ml-4 min-w-0 flex-1">
-                      <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-[17px] font-medium leading-6 text-[#1a73e8]">{account.name}</p>
-                      <p className="truncate text-[15px] font-normal leading-5 text-[#5f6368]">{account.email}</p>
+                  <div key={account.email} className="flex h-16 items-center px-5 transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
+                    <AccountAvatar name={account.name} color={account.color} size="size-10" textSize="text-sm" />
+                    <div className="ml-3 min-w-0 flex-1">
+                      <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-sm font-medium leading-5 text-[#202124]">{account.name}</p>
+                      <p className="truncate text-xs font-normal leading-4 text-[#5f6368]">{account.email}</p>
                     </div>
-                    <span className="ml-4 shrink-0 text-base font-normal leading-6 text-[#5f6368]">{account.unread}</span>
+                    <span className="ml-3 shrink-0 text-sm font-normal leading-5 text-[#5f6368]">{account.unread}</span>
                   </div>
                 ))}
               </div>
 
               <div className="h-px bg-[#e8eaed]" />
 
-              <button type="button" className="flex h-14 w-full items-center px-6 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
-                <SymbolIcon name="person_add" />
-                <span className="ml-4 font-['Google_Sans',Roboto,sans-serif] text-[17px] font-normal leading-6 text-[#202124]">Add another account</span>
+              <button type="button" className="flex h-12 w-full items-center px-5 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
+                <SymbolIcon name="person_add" className="text-[18px]" />
+                <span className="ml-3 font-['Google_Sans',Roboto,sans-serif] text-sm font-normal leading-5 text-[#202124]">Add another account</span>
               </button>
-              <button type="button" className="flex h-14 w-full items-center px-6 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
-                <SymbolIcon name="manage_accounts" />
-                <span className="ml-4 font-['Google_Sans',Roboto,sans-serif] text-[17px] font-normal leading-6 text-[#202124]">Manage accounts on this device</span>
+              <button type="button" className="flex h-12 w-full items-center px-5 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]">
+                <SymbolIcon name="manage_accounts" className="text-[18px]" />
+                <span className="ml-3 font-['Google_Sans',Roboto,sans-serif] text-sm font-normal leading-5 text-[#202124]">Manage accounts on this device</span>
               </button>
 
               <div className="h-px bg-[#e8eaed]" />
@@ -214,15 +214,15 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
                   setAccountOpen(false)
                   onLogout()
                 }}
-                className="flex h-14 w-full items-center px-6 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]"
+                className="flex h-12 w-full items-center px-5 text-left transition hover:bg-[#f1f3f4] active:bg-[#e8eaed]"
               >
-                <SymbolIcon name="logout" />
-                <span className="ml-4 font-['Google_Sans',Roboto,sans-serif] text-[17px] font-normal leading-6 text-[#202124]">Sign out</span>
+                <SymbolIcon name="logout" className="text-[18px]" />
+                <span className="ml-3 font-['Google_Sans',Roboto,sans-serif] text-sm font-normal leading-5 text-[#202124]">Sign out</span>
               </button>
 
               <div className="h-px bg-[#e8eaed]" />
 
-              <div className="flex items-center justify-center pb-5 pt-4 text-[15px] font-normal leading-5 text-[#5f6368]">
+              <div className="flex items-center justify-center pb-4 pt-3 text-xs font-normal leading-4 text-[#5f6368]">
                 <span>Privacy Policy</span>
                 <span className="px-2">•</span>
                 <span>Terms of service</span>
