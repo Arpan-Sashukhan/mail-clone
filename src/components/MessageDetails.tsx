@@ -37,7 +37,7 @@ export function MessageDetails({ email }: MessageDetailsProps) {
   const date = formatMessageDate(email)
 
   return (
-    <section className="mx-4 rounded-[20px] border border-[#9aa0a6] bg-white p-4 font-['Roboto',Arial,sans-serif] text-base font-normal leading-6 text-[#3c4043]" aria-label="Message details">
+    <section className="mx-4 mt-2 rounded-2xl border border-[#dadce0] bg-white p-4 font-['Roboto',Arial,sans-serif] text-[13px] font-normal leading-5 text-[#3c4043] dark:border-[#3c4043] dark:bg-[#202124] dark:text-[#e3e3e3]" aria-label="Message details">
       <div className="grid gap-2">
         {[
           ['From', `${fromName} • ${fromEmail}`],
@@ -57,7 +57,7 @@ export function MessageDetails({ email }: MessageDetailsProps) {
         </span>
         <div>
           <p>Standard encryption (TLS).</p>
-          <a
+          
             href="https://support.google.com/mail/answer/6330403"
             target="_blank"
             rel="noreferrer"
