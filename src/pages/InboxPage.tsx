@@ -2,7 +2,7 @@ import { useOutletContext } from 'react-router-dom'
 import { Inbox } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TouchEvent } from 'react'
-import { BottomNavigation } from '../components/BottomNavigation'
+import { EmailDetailBottomNav } from '../components/EmailDetailBottomNav'
 import { CategoryCard } from '../components/CategoryCard'
 import { ComposeButton } from '../components/ComposeButton'
 import { EmailListItem } from '../components/EmailListItem'
@@ -257,11 +257,11 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
           )
         )}
       </section>
-      <div className="fixed bottom-[calc(var(--bottom-nav-height)+16px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-50">
+      <div className="fixed bottom-[calc(var(--email-detail-nav-height)+16px+env(safe-area-inset-bottom))] right-[max(16px,env(safe-area-inset-right))] z-50">
         <ComposeButton compact={fabCompact} />
       </div>
       <div className="fixed bottom-0 left-0 right-0 z-40 bg-inherit pb-[env(safe-area-inset-bottom)]">
-        <BottomNavigation />
+        <EmailDetailBottomNav unreadCount={emails.filter((item) => !item.read).length} />
       </div>
     </main>
   )
