@@ -26,10 +26,10 @@ export function OfflineBanner() {
       <div
       role="status"
       aria-live="polite"
-      className={`sticky top-0 z-40 flex h-10 items-center gap-2 bg-[#303134] px-4 text-[13px] text-white transition-all duration-300 ${
+      className={`sticky top-0 z-40 flex items-center gap-2 overflow-hidden bg-[#303134] px-4 text-[13px] text-white transition-all duration-300 ${
         online
-          ? "-translate-y-full opacity-0 pointer-events-none"
-          : "translate-y-0 opacity-100"
+          ? "h-0 opacity-0 pointer-events-none"
+          : "h-10 opacity-100"
       }`}
     >
       <WifiOff size={16} className="shrink-0" />
