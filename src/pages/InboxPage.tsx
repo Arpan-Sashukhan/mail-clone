@@ -179,7 +179,7 @@ export function InboxPage({ mailbox, settingsView = false }: InboxPageProps) {
       onTouchEnd={handleTouchEnd}
       onTouchCancel={handleTouchEnd}
     >
-    <div className="sticky top-0 z-40 bg-inherit pt-[env(safe-area-inset-top)]">
+    <div className="sticky top-0 z-40 bg-inherit">
       <SearchBar
         profile={profile}
         onOpenDrawer={openDrawer}
