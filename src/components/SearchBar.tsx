@@ -157,7 +157,7 @@ export function SearchBar({ profile, onOpenDrawer, onLogout, searchValue = '', o
                     </span>
                   </div>
                   <div className="ml-4 min-w-0 flex-1">
-                    <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-lg font-semibold leading-6 text-[#202124]">{profile.name}</p>
+                    <p className="truncate font-['Google_Sans',Roboto,sans-serif] text-[17px] font-medium leading-6 text-[#202124]">{account.name}</p>
                     <p className="mt-0.5 truncate text-[15px] font-normal leading-5 text-[#5f6368]">{profile.email}</p>
                   </div>
                   <span className="ml-4 mt-0.5 shrink-0 text-base font-medium leading-6 text-[#5f6368]">99+</span>
