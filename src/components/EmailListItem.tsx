@@ -59,8 +59,8 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
       <div className="flex min-w-0 flex-col gap-0.5">
         <div className="min-w-0">
           <p
-            className={`gmail-sender truncate font-['Roboto',Arial,sans-serif] leading-[21px] tracking-normal text-[#202124] ${
-              email.read ? 'font-medium' : 'font-bold'
+            className={`gmail-sender truncate font-[Google_Sans, Roboto, sans-serif] leading-[21px] tracking-normal text-[#202124] ${
+              email.read ? 'font-normal' : 'font-medium'
             }`}
           >
             <Highlight value={email.sender} query={searchQuery} />
@@ -68,11 +68,11 @@ function EmailListItemComponent({ email, searchQuery, onToggleStar }: EmailListI
         </div>
 
         <div className="min-w-0">
-          <p className={`gmail-subject truncate font-['Roboto',Arial,sans-serif] leading-[18px] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
+          <p className={`gmail-subject truncate font-[Google_Sans, Roboto, sans-serif] leading-[18px] tracking-normal text-[#202124] ${email.read ? 'font-normal' : 'font-semibold'}`}>
             {isDraft ? <span className="font-medium text-[#d93025]">Draft </span> : null}
             <Highlight value={email.subject} query={searchQuery} />
           </p>
-          <p className="gmail-preview truncate font-['Roboto',Arial,sans-serif] leading-[16px] tracking-normal">
+          <p className="gmail-preview truncate font-[Google_Sans, Roboto, sans-serif] leading-[16px] tracking-normal">
             <Highlight value={email.preview} query={searchQuery} />
             {hasAttachments ? (
               <span className="ml-1 inline-flex align-middle text-[#5f6368]">
